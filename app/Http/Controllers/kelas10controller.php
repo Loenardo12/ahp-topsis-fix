@@ -1,67 +1,71 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\isikelas10;
+use App\Models\modelkelas10;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 class kelas10controller extends Controller
 {
-    //
 
 
-    public function index() : View
+
+    public function index()
     {
-        //get all kelas
-        $kelas10 = isikelas10::latest()->paginate(10);
-
-        //render view with kelas
+        $kelas10 = modelkelas10::latest()->paginate(10);
         return view('dashboard.kelas.kelas10.index', compact('kelas10'));
     }
 
-    public function create(): View
+    public function create()
     {
         return view('dashboard.kelas.kelas10.create');
     }
 
-    /**
-     * store
-     *
-     * @param  mixed $request
-     * @return RedirectResponse
-     */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        //validate form
         $request->validate([
-
-            'title'         => 'required|min:5',
-            'description'   => 'required|min:10'
-
-        ]);
-        //create product
-        isikelas10::create([
-
-            'title'         => $request->title,
-            'description'   => $request->description
-
-
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        //redirect to index
-        return redirect()->route('kelas10.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        modelkelas10::create($request->only(['title', 'description']));
+
+        return redirect()->route('kelas10.index')->with('success', 'Kelas berhasil ditambahkan.');
     }
 
-
-    public function destroy($id): RedirectResponse
+    public function show(modelkelas10 $kelas10)
     {
-        //get product by ID
-        $kelas10 = isikelas10::findOrFail($id);
+        // Mengambil semua siswa di kelas ini
+        $absenKelas10 = $kelas10->isikelas10()->with('absenkelas10')->get()->flatMap(function ($siswa) {
+            // Jika siswa memiliki data absensi, ambil semua
+            return $siswa->absenkelas10;
+        })->sortBy('isikelas10.nama'); // Urutkan berdasarkan nama siswa
 
-        //delete product
-        $kelas10->delete();
+        $modelkelas10 = $kelas10; // Untuk digunakan di view
 
-        //redirect to index
-        return redirect()->route('kelas10.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        return view('dashboard.kelas.kelas10.isikelas10.kelas10isi', compact('absenKelas10', 'modelkelas10'));
+    }
+
+    public function edit(modelkelas10 $kelas10)
+    {
+        return view('dashboard.kelas.kelas10.edit', compact('kelas10'));
+    }
+
+    public function update(Request $request, modelkelas10 $kelas10)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $kelas10->update($request->only(['title', 'description']));
+
+        return redirect()->route('kelas10.index')->with('success', 'Kelas berhasil diperbarui.');
+    }
+
+    public function destroy(modelkelas10 $kelas10)
+    {
+        $kelas10->delete(); // Karena di migration foreign key ada onDelete('cascade'), maka semua IsiKelas10 dan AbsenKelas10 terkait juga akan dihapus
+        return redirect()->route('kelas10.index')->with('success', 'Kelas dan semua data siswa di dalamnya berhasil dihapus.');
     }
 }

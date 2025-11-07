@@ -2,22 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-class isikelas10 extends Model
+use Illuminate\Database\Eloquent\Model;
+
+class IsiKelas10 extends Model
 {
-    //
     use HasFactory;
 
-    /**
-     * fillable
-     *
-     * @var array
-     */
-    protected $fillable = [
-                'title',
-        'description',
-       
-    ];
+    // Tentukan nama tabel yang benar
+    protected $table = 'isi_kelas10';
 
+    protected $fillable = ['modelkelas10s_id', 'nama', 'nisn'];
+
+    // Relasi: IsiKelas10 milik ModelKelas10
+    public function modelkelas10()
+    {
+        return $this->belongsTo(ModelKelas10::class, 'modelkelas10s_id');
+    }
+
+    // Relasi: IsiKelas10 memiliki banyak AbsenKelas10
+    public function absenkelas10()
+    {
+        return $this->hasMany(AbsenKelas10::class, 'isi_kelas10_id');
+    }
 }

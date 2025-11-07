@@ -6,24 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('isikelas10s', function (Blueprint $table) {
+        Schema::create('isi_kelas10', function (Blueprint $table) {
             $table->id();
-             $table->string('title');
-             $table->text('description');
+            $table->foreignId('modelkelas10s_id')->constrained('modelkelas10s')->onDelete('cascade');
+            $table->string('nama');
+            $table->string('nisn');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('isikelas10s');
+        Schema::dropIfExists('isi_kelas10');
     }
 };

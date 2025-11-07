@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\isikelas10controller;
+use App\Http\Controllers\AbsenKelas10Controller;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\ObjekController;
 use App\Http\Controllers\PenilaianController;
@@ -46,7 +48,24 @@ Route::get('/kelas12', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard2');
 
-Route::resource('/kelas10',kelas10controller::class);
+
+// Route import (pastikan method import ada di controller)
+Route::post('absenkelas10/import', [AbsenKelas10Controller::class, 'import'])->name('absenkelas10.import');
+// Resource route untuk kelas10 dan isikelas10
+// Route::resource('/kelas10', kelas10controller::class);
+
+
+// Route untuk Kelas10
+Route::resource('kelas10', Kelas10Controller::class);
+
+// Route untuk AbsenKelas10 (terkait dengan kelas dan siswa)
+Route::get('/modelkelas10/{modelkelas10}/absen/create', [AbsenKelas10Controller::class, 'create'])->name('absenkelas10.create');
+Route::post('/modelkelas10/{modelkelas10}/absen', [AbsenKelas10Controller::class, 'store'])->name('absenkelas10.store');
+Route::get('/absen/{absenkelas10}/edit', [AbsenKelas10Controller::class, 'edit'])->name('absenkelas10.edit');
+Route::put('/absen/{absenkelas10}', [AbsenKelas10Controller::class, 'update'])->name('absenkelas10.update');
+Route::delete('/absen/{absenkelas10}', [AbsenKelas10Controller::class, 'destroy'])->name('absenkelas10.destroy');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
