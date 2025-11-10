@@ -8,7 +8,7 @@
 
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/logo.jpg') }}" />
     <link rel="icon" type="image/png" href="{{ asset('img/logo.jpg') }}" />
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('dashboard.layouts.link')
     @yield('css')

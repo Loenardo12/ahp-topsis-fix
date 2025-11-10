@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubKriteriaController;
 use App\Http\Controllers\TopsisController;
 use App\Http\Controllers\kelas10controller;
+use App\Http\Controllers\ImportAbsenController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,18 +50,23 @@ Route::get('/kelas12', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard2');
 
 
-// Route import (pastikan method import ada di controller)
-Route::post('absenkelas10/import', [AbsenKelas10Controller::class, 'import'])->name('absenkelas10.import');
-// Resource route untuk kelas10 dan isikelas10
-// Route::resource('/kelas10', kelas10controller::class);
 
+// Route untuk form import
+Route::get('/kelas10/import', [ImportAbsenController::class, 'showForm'])->name('import.absen.form');
 
-// Route untuk Kelas10
+// Route untuk mendapatkan daftar sheet
+Route::post('/import/get-sheets', [ImportAbsenController::class, 'getSheets'])->name('import.absen.getSheets');
+
+// Route untuk memproses import
+Route::post('/import/process', [ImportAbsenController::class, 'processImport'])->name('import.absen.process');
+
+/// Route untuk Kelas10
 Route::resource('kelas10', Kelas10Controller::class);
 
-// Route untuk AbsenKelas10 (terkait dengan kelas dan siswa)
-Route::get('/modelkelas10/{modelkelas10}/absen/create', [AbsenKelas10Controller::class, 'create'])->name('absenkelas10.create');
-Route::post('/modelkelas10/{modelkelas10}/absen', [AbsenKelas10Controller::class, 'store'])->name('absenkelas10.store');
+// Route untuk AbsenKelas10
+Route::get('/kelas10/{kelas10}/absen/create', [AbsenKelas10Controller::class, 'create'])->name('absenkelas10.create');
+// Ganti URI untuk store: hapus {kelas10}
+Route::post('/kelas10/absen', [AbsenKelas10Controller::class, 'store'])->name('absenkelas10.store');
 Route::get('/absen/{absenkelas10}/edit', [AbsenKelas10Controller::class, 'edit'])->name('absenkelas10.edit');
 Route::put('/absen/{absenkelas10}', [AbsenKelas10Controller::class, 'update'])->name('absenkelas10.update');
 Route::delete('/absen/{absenkelas10}', [AbsenKelas10Controller::class, 'destroy'])->name('absenkelas10.destroy');

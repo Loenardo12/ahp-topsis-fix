@@ -215,11 +215,12 @@
                     <i class="bi bi-download"></i> Export
                 </button>
 
-                <button class="btn-import">
-                    <i class="bi bi-upload"></i> Import
-                </button>
+                
                 <div>
-                    <a href="{{ route('absenkelas10.create', $modelkelas10->id) }}" class="btn btn-success me-2">
+                    <a href="{{ route('import.absen.form') }}" class="btn btn-warning me-2"> <!-- Atau buat route baru yang menerima ID kelas -->
+        <i class="bi bi-upload"></i> Import dari Excel
+    </a>
+                    <a href="{{ route('absenkelas10.create', $kelas10_obj->id) }}" class="btn btn-success me-2">
                         <i class="bi bi-plus-circle me-1"></i>Add Absensi
                     </a>
                 </div>

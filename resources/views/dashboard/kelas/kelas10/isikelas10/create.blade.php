@@ -3,8 +3,8 @@
 @section('container')
 <div class="container-fluid py-4" style="background-color: #f6ffdf; min-height: 100vh;">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold mb-0">Tambah Absensi Siswa ke Kelas {{ $modelkelas10->title }}</h3>
-    <a href="{{ route('modelkelas10.show', $modelkelas10->id) }}" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Kembali</a>
+    <h3 class="fw-bold mb-0">Tambah Absensi Siswa ke Kelas {{ $kelas10_obj->title }}</h3>
+    <a href="{{ route('kelas10.show', $kelas10_obj->id) }}" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Kembali</a>
   </div>
 
   <div class="row justify-content-center">
@@ -13,23 +13,26 @@
         <div class="card-body">
           <form action="{{ route('absenkelas10.store') }}" method="POST">
             @csrf
-            <input type="hidden" name="kelas10_id" value="{{ $modelkelas10->id }}">  <!-- Tambahkan hidden input untuk kelas ID -->
+            <!-- Masih perlu ID kelas untuk nanti mencari siswa -->
+            <input type="hidden" name="kelas10_id" value="{{ $kelas10_obj->id }}">
 
             <div class="mb-3">
-              <label for="isi_kelas10_id" class="form-label">Pilih Siswa (Nama - NISN)</label>
-              <select class="form-control @error('isi_kelas10_id') is-invalid @enderror" id="isi_kelas10_id" name="isi_kelas10_id" required>
-                <option value="">-- Pilih Siswa --</option>
-                @foreach($isiKelas10 as $siswa)
-                  <option value="{{ $siswa->id }}" {{ old('isi_kelas10_id') == $siswa->id ? 'selected' : '' }}>
-                    {{ $siswa->nama }} - {{ $siswa->nisn }}
-                  </option>
-                @endforeach
-              </select>
-              @error('isi_kelas10_id')
+              <label for="nama" class="form-label">Nama Siswa</label>
+              <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{ old('nama') }}" required>
+              @error('nama')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
 
+            <div class="mb-3">
+              <label for="nisn" class="form-label">NISN Siswa</label>
+              <input type="text" class="form-control @error('nisn') is-invalid @enderror" id="nisn" name="nisn" value="{{ old('nisn') }}" required>
+              @error('nisn')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
+            </div>
+
+            <!-- Input hidden untuk semester, bulan, tahun -->
             <div class="mb-3">
               <label for="semester" class="form-label">Semester</label>
               <select class="form-control @error('semester') is-invalid @enderror" id="semester" name="semester" required>
@@ -80,7 +83,6 @@
 </div>
 
 <script>
-  // Message with sweetalert
   @if(session('success'))
     Swal.fire({
       icon: "success",

@@ -17,8 +17,16 @@ return new class extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('isi_kelas10');
+        Schema::table('isi_kelas10', function (Blueprint $table) {
+            // Hapus foreign key constraint terlebih dahulu
+            $table->dropForeign(['modelkelas10s_id']);
+            // Lalu hapus kolomnya
+            $table->dropColumn('modelkelas10s_id');
+        });
     }
 };

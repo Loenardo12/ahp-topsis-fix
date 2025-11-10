@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Kelas10;
 use App\Models\IsiKelas10;
 use Illuminate\Http\Request;
 
@@ -10,7 +10,7 @@ class IsiKelas10Controller extends Controller
     // Jika diperlukan, tambahkan create untuk add siswa
     public function create($kelasId)
     {
-        $modelkelas10 = \App\Models\ModelKelas10::findOrFail($kelasId);
+        $modelkelas10 = Kelas10::findOrFail($kelasId);
         return view('dashboard.kelas.kelas10.isikelas10.create', compact('modelkelas10'));
     }
     public function store(Request $request)

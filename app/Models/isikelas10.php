@@ -9,18 +9,16 @@ class IsiKelas10 extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel yang benar
     protected $table = 'isi_kelas10';
 
     protected $fillable = ['modelkelas10s_id', 'nama', 'nisn'];
 
-    // Relasi: IsiKelas10 milik ModelKelas10
-    public function modelkelas10()
+    // Ganti use statement
+    public function kelas10()
     {
-        return $this->belongsTo(ModelKelas10::class, 'modelkelas10s_id');
+        return $this->belongsTo(Kelas10::class, 'modelkelas10s_id'); // Nama class model berubah
     }
 
-    // Relasi: IsiKelas10 memiliki banyak AbsenKelas10
     public function absenkelas10()
     {
         return $this->hasMany(AbsenKelas10::class, 'isi_kelas10_id');

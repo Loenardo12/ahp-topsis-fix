@@ -68,7 +68,7 @@
       $kelas = range('A', 'L'); // menghasilkan array ['A', 'B', ..., 'L']
     @endphp --}}
 
-    @forelse ($kelas10 as $variabelkelas10 )
+    @forelse ($kelas10s as $variabelkelas10 )
     <div class="card card-custom position-relative">
         <div class="card-custom-img"
              style="background-image: url('https://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg');">
@@ -98,7 +98,7 @@
 
 
   </div>
-  {{ $kelas10->links() }}
+  {{ $kelas10s->links() }}
 </div>
 <script>
         //message with sweetalert

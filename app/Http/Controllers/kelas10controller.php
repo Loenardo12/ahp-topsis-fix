@@ -1,19 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\modelkelas10;
+
+// Ganti use statement
+use App\Models\Kelas10;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-class kelas10controller extends Controller
+
+class Kelas10Controller extends Controller
 {
-
-
-
     public function index()
     {
-        $kelas10 = modelkelas10::latest()->paginate(10);
-        return view('dashboard.kelas.kelas10.index', compact('kelas10'));
+        // Karena nama route resource adalah 'kelas10', Laravel akan mencari model Kelas10 secara otomatis.
+        // Kita tetap gunakan variabel $kelas10s untuk view.
+        $kelas10s = Kelas10::latest()->paginate(10);
+        return view('dashboard.kelas.kelas10.index', compact('kelas10s')); // Ganti variabel
     }
 
     public function create()
@@ -28,30 +30,34 @@ class kelas10controller extends Controller
             'description' => 'nullable|string',
         ]);
 
-        modelkelas10::create($request->only(['title', 'description']));
+        Kelas10::create($request->only(['title', 'description']));
 
+        // Route tetap 'kelas10' karena nama resource-nya adalah 'kelas10'
         return redirect()->route('kelas10.index')->with('success', 'Kelas berhasil ditambahkan.');
     }
 
-    public function show(modelkelas10 $kelas10)
-    {
-        // Mengambil semua siswa di kelas ini
-        $absenKelas10 = $kelas10->isikelas10()->with('absenkelas10')->get()->flatMap(function ($siswa) {
-            // Jika siswa memiliki data absensi, ambil semua
-            return $siswa->absenkelas10;
-        })->sortBy('isikelas10.nama'); // Urutkan berdasarkan nama siswa
+    // Parameter $kelas10 sesuai dengan route resource 'kelas10/{kelas10}'
+    // Karena nama class model sekarang adalah Kelas10, Laravel bisa menemukannya.
+    public function show(Kelas10 $kelas10)
+{
+    $absenKelas10 = $kelas10->isikelas10()->with('absenkelas10')->get()->flatMap(function ($siswa) {
+        return $siswa->absenkelas10;
+    })->sortBy('isikelas10.nama');
 
-        $modelkelas10 = $kelas10; // Untuk digunakan di view
+    // Ganti nama variabel agar sesuai dengan yang digunakan di view kelas10isi
+    $kelas10_obj = $kelas10; // <-- Ganti dari $modelkelas10 menjadi $kelas10_obj atau $kelas10
 
-        return view('dashboard.kelas.kelas10.isikelas10.kelas10isi', compact('absenKelas10', 'modelkelas10'));
-    }
+    return view('dashboard.kelas.kelas10.isikelas10.kelas10isi', compact('absenKelas10', 'kelas10_obj')); // <-- Ganti variabel yang di-pass
+}
 
-    public function edit(modelkelas10 $kelas10)
+    // Parameter harus sesuai dengan route resource 'kelas10/{kelas10}'
+    public function edit(Kelas10 $kelas10)
     {
         return view('dashboard.kelas.kelas10.edit', compact('kelas10'));
     }
 
-    public function update(Request $request, modelkelas10 $kelas10)
+    // Parameter harus sesuai dengan route resource 'kelas10/{kelas10}'
+    public function update(Request $request, Kelas10 $kelas10)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -63,9 +69,10 @@ class kelas10controller extends Controller
         return redirect()->route('kelas10.index')->with('success', 'Kelas berhasil diperbarui.');
     }
 
-    public function destroy(modelkelas10 $kelas10)
+    // Parameter harus sesuai dengan route resource 'kelas10/{kelas10}'
+    public function destroy(Kelas10 $kelas10)
     {
-        $kelas10->delete(); // Karena di migration foreign key ada onDelete('cascade'), maka semua IsiKelas10 dan AbsenKelas10 terkait juga akan dihapus
+        $kelas10->delete();
         return redirect()->route('kelas10.index')->with('success', 'Kelas dan semua data siswa di dalamnya berhasil dihapus.');
     }
 }
