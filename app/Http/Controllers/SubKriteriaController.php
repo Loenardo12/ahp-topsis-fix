@@ -19,26 +19,31 @@ class SubKriteriaController extends Controller
     }
 
     public function index()
-    {
-        $judul = "Nilai Kriteria";
+{
+    $judul = "Nilai Kriteria";
 
-        $kriteria = $this->kriteriaService->getAll();
+    $kriteria = $this->kriteriaService->getAll();
 
-        $data = null;
-        foreach ($kriteria as $item) {
-            $data[] = [
-                'kriteria_id' => $item->id,
-                'kriteria' => $item->nama,
-                'sub_kriteria' => $this->subKriteriaService->getWhereKriteria($item->id),
-            ];
-        }
+    $data = []; // <-- Pastikan inisialisasi sebagai array
+    foreach ($kriteria as $item) {
+        // Ambil sub-kriteria, pastikan service mengembalikan array kosong jika tidak ada
+        $subKriteriaList = $this->subKriteriaService->getWhereKriteria($item->id);
+        // Jika service bisa mengembalikan null, pastikan kita jadikan array
+        $subKriteriaList = $subKriteriaList ?: collect(); // Atau collect([])
 
-        return view('dashboard.sub_kriteria.index', [
-            "judul" => $judul,
-            "kriteria" => $kriteria,
-            "data" => $data,
-        ]);
+        $data[] = [
+            'kriteria_id' => $item->id,
+            'kriteria' => $item->nama,
+            'sub_kriteria' => $subKriteriaList, // <-- Ini sekarang pasti bisa diiterasi
+        ];
     }
+
+    return view('dashboard.sub_kriteria.index', [
+        "judul" => $judul,
+        "kriteria" => $kriteria,
+        "data" => $data,
+    ]);
+}
 
     public function simpan(SubKriteriaStoreRequest $request)
     {

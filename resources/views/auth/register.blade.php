@@ -1,3 +1,4 @@
+{{-- resources/views/auth/register.blade.php --}}
 <x-guest-layout>
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -37,6 +38,23 @@
                             name="password_confirmation" required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <!-- Role -->
+        <div class="mt-4">
+            <x-input-label for="role_id" :value="__('Role')" />
+            <select name="role_id" id="role_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+    <option value="">-- Pilih Role --</option>
+    @php
+        $roles = \App\Models\Role::all();
+    @endphp
+    @foreach ($roles as $role)
+        <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+            {{ $role->role_name }}
+        </option>
+    @endforeach
+</select>
+            <x-input-error :messages="$errors->get('role_id')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">

@@ -97,7 +97,7 @@
     </div>
 
     <!-- cards row 2 -->
-    <div class="flex flex-wrap mt-6 -mx-3">
+    {{-- <div class="flex flex-wrap mt-6 -mx-3">
         <div class="w-full px-3 mb-6 lg:mb-0 lg:w-7/12 lg:flex-none">
             <div class="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
                 <div class="flex-auto p-4">
@@ -107,18 +107,6 @@
                                 <p class="pt-2 mb-1 font-semibold">Sistem Pendukung Keputusan</p>
                                 <h5 class="font-bold">TOPSIS</h5>
                                 <p class="mb-12 text-justify">Topsis adalah metode pengambilan keputusan multi kriteria dengan dasar alternatif yang dipilih memiliki jarak terdekat dengan solusi ideal positif dan memiliki jarak terjauh dari solusi ideal negatif.</p>
-                                <h5 class="font-bold">AHP</h5>
-                                <p class="mb-3 text-justify text-gray-600 dark:text-gray-400">
-                    AHP merupakan suatu model pendukung keputusan yang dikembangkan oleh Thomas L. Saaty. Model pendukung
-                    keputusan ini akan menguraikan masalah multi faktor atau multi kriteria yang kompleks menjadi suatu
-                    hirarki yang didefinisikan sebagai suatu representasi dari sebuah permasalahan yang kompleks dalam suatu
-                    struktur multi-level dimana level pertama adalah tujuan, yang diikuti level faktor, kriteria, sub
-                    kriteria, dan seterusnya ke bawah hingga level terakhir dari alternatif.
-                </p>
-                                <a class="mt-auto mb-0 font-semibold leading-normal text-sm group text-slate-500" href="{{ route('hitung_topsis') }}">
-                                    Mulai
-                                    <i class="ri-arrow-right-line ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
-                                </a>
 
                             </div>
                         </div>
@@ -162,7 +150,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- cards row 3 -->
     <div class="flex flex-wrap mt-6 -mx-3">

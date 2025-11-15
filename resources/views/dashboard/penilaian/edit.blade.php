@@ -19,11 +19,13 @@
                             <select class="select select-bordered text-dark" name="kriteria_id[]" id="kriteria_id[]">
                                 <option disabled selected>--Pilih--</option>
                                 @foreach ($subKriteria->where('kriteria_id', $item->kriteria_id) as $value)
-                                    @if ($value->id == $data2->where('kriteria_id', $item->kriteria_id)->first()->sub_kriteria_id)
-                                        <option value="{{ $value->id }}" selected>{{ $value->nama }}</option>
-                                    @else
-                                        <option value="{{ $value->id }}">{{ $value->nama }}</option>
-                                    @endif
+                                    @php
+                                        // Ambil sub_kriteria_id dari array yang telah dibuat di controller
+                                        $selectedSubKriteriaId = $nilai_per_kriteria[$item->kriteria_id] ?? null;
+                                    @endphp
+                                    <option value="{{ $value->id }}" {{ $value->id == $selectedSubKriteriaId ? 'selected' : '' }}>
+                                        {{ $value->nama }}
+                                    </option>
                                 @endforeach
                             </select>
                             <label class="label">

@@ -1,4 +1,96 @@
+/* resources/css/app.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @plugin "daisyui";
+
+/* --- Override Modal Bootstrap --- */
+.modal-backdrop.show {
+    z-index: 1050 !important;
+    opacity: 0.5 !important;
+}
+
+.modal.show {
+    z-index: 1051 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show .modal-dialog {
+    display: block !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: static !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: auto !important;
+}
+
+.modal.show .modal-content {
+    z-index: 1052 !important;
+    position: relative !important;
+}
+
+/* Jika elemen layout memiliki z-index tinggi, override secara spesifik */
+/* Ganti .sidebar, .navbar, dll. dengan kelas spesifik dari template Anda jika berbeda */
+/* Contoh: */
+/* .sidebar { z-index: 1040 !important; } */
+/* .navbar { z-index: 1040 !important; } */
+
+/* Jangan override overflow global */
+/* main, .main, .sidebar, .navbar, dll. biarkan seperti semula */
+.sidebar::-webkit-scrollbar,
+#sidebar::-webkit-scrollbar, /* Ganti dengan ID sidebar Anda jika ada */
+.sidenav::-webkit-scrollbar, /* Jika menggunakan kelas sidenav */
+#sidenav::-webkit-scrollbar {
+    width: 8px; /* Lebar scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-track,
+#sidebar::-webkit-scrollbar-track,
+.sidenav::-webkit-scrollbar-track,
+#sidenav::-webkit-scrollbar-track {
+    background: transparent; /* Track menjadi transparan */
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+#sidebar::-webkit-scrollbar-thumb,
+.sidenav::-webkit-scrollbar-thumb,
+#sidenav::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Thumb (ikon scroll) menjadi transparan */
+    border-radius: 4px;
+}
+
+/* Hover efek untuk thumb (opsional) */
+.sidebar::-webkit-scrollbar-thumb:hover,
+#sidebar::-webkit-scrollbar-thumb:hover,
+.sidenav::-webkit-scrollbar-thumb:hover,
+#sidenav::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Warna saat hover */
+}
+
+/* Untuk Firefox */
+.sidebar,
+#sidebar,
+.sidenav,
+#sidenav {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent; /* thumb dan track */
+}
+
+/* Jika Anda ingin thumb muncul saat hover */
+.sidebar:hover::-webkit-scrollbar-thumb,
+#sidebar:hover::-webkit-scrollbar-thumb,
+.sidenav:hover::-webkit-scrollbar-thumb,
+#sidenav:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); /* Warna thumb saat hover */
+}
+
+.sidebar:hover,
+#sidebar:hover,
+.sidenav:hover,
+#sidenav:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* thumb saat hover */
+}

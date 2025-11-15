@@ -57,19 +57,19 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold mb-0">Manajemen Kelas XII</h3>
     <div>
-      <button class="btn btn-success me-2"><i class="bi bi-plus-circle me-1"></i>Add Class</button>
-      <button class="btn btn-danger"><i class="bi bi-trash me-1"></i>Delete Class</button>
+      <a href="{{ route('kelas12.create') }}" class="btn btn-success me-2"><i class="bi bi-plus-circle me-1"></i>Add Class</a>
+
     </div>
   </div>
 
   <!-- Grid horizontal cards -->
   <div class="card-container">
-    @php
+    {{-- @php
       $kelas = range('A', 'L'); // menghasilkan array ['A', 'B', ..., 'L']
-    @endphp
+    @endphp --}}
 
-    @foreach ($kelas as $huruf)
-      <div class="card card-custom position-relative">
+    @forelse ($kelas12s as $variabelkelas12 )
+    <div class="card card-custom position-relative">
         <div class="card-custom-img"
              style="background-image: url('https://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg');">
         </div>
@@ -77,16 +77,49 @@
           <img class="img-fluid" src="https://res.cloudinary.com/d3/image/upload/c_pad,g_center,h_200,q_auto:eco,w_200/bootstrap-logo_u3c8dx.jpg" alt="Avatar" />
         </div>
         <div class="card-body mt-5" style="overflow-y: auto">
-          <h4 class="card-title text-center">Kelas XII {{ $huruf }}</h4>
+          <h4 class="card-title text-center">Kelas X {{ $variabelkelas12->title }}</h4>
           <p class="card-text text-center">Jumlah siswa: {{ rand(20, 40) }}</p>
-          <p class="card-text text-center">Keterangan tambahan untuk kelas {{ $huruf }} dapat dimasukkan di sini.</p>
+          <p class="card-text text-center"> {{ $variabelkelas12->description }} </p>
         </div>
         <div class="card-footer text-center" style="background: inherit; border-color: inherit;">
-          <a href="#" class="btn btn-primary btn-sm">Lihat Detail</a>
-          <a href="#" class="btn btn-outline-primary btn-sm">Hapus</a>
+                    <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('kelas12.destroy', $variabelkelas12->id) }}" method="POST">
+                                                <a href="{{ route('kelas12.show', $variabelkelas12->id) }}" class="btn btn-primary btn-sm">SHOW</a>
+                                                                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
+                                            </form>
         </div>
       </div>
-    @endforeach
+    @empty
+<div class="alert alert-danger">
+                                        Data Products belum ada.
+                                    </div>
+    @endforelse
+
+
   </div>
+  {{ $kelas12s->links() }}
 </div>
+<script>
+        //message with sweetalert
+        @if(session('success'))
+            Swal.fire({
+                icon: "success",
+                title: "BERHASIL",
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @elseif(session('error'))
+            Swal.fire({
+                icon: "error",
+                title: "GAGAL!",
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+
+    </script>
+
 @endsection

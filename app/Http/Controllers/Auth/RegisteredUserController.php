@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role; // Pastikan model Role diimpor
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        // Kita tidak perlu mengirim $roles ke view lagi karena sudah diambil di blade
         return view('auth.register');
     }
 
@@ -29,16 +31,21 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            // Validasi role_id
+            'role_id' => ['required', 'exists:roles,id'], // Harus ada di tabel roles
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            // Tambahkan role_id
+            'role_id' => $request->role_id, // <-- Baris ini penting
         ]);
 
         event(new Registered($user));

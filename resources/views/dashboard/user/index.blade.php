@@ -1,286 +1,200 @@
 @extends('dashboard.layouts.app')
 
 @section('container')
-    <!DOCTYPE html>
-    <html lang="id">
+<style>
+    body {
+        background-color: #f6ffde !important;
+    }
+    .card {
+        border-radius: 14px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .card-header {
+        background: #ffffff;
+        border-bottom: 2px solid #e8f5c8;
+        padding: 16px 20px;
+        border-radius: 14px 14px 0 0;
+    }
+    table thead {
+        background: #e8f5c8;
+    }
+    table thead th {
+        font-weight: 600;
+        color: #3b4b2a;
+    }
+    .btn-primary {
+        background-color: #5c7c2d;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #4a661f;
+    }
+    .btn-success {
+        background-color: #4CAF50;
+        border: none;
+    }
+    .btn-success:hover {
+        background-color: #3c8d40;
+    }
+    .btn-danger {
+        background-color: #d9534f;
+    }
+    .modal-content {
+        border-radius: 14px;
+    }
+</style>
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Rekap Absensi Siswa</title>
-        <style>
-            body {
-                font-family: 'Segoe UI', Roboto, sans-serif;
-                background-color: #f9fafb;
-                color: #333;
-                line-height: 1.6;
-                margin: 0;
-                padding: 0;
-            }
+<div class="card mt-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="m-0">Data Users</h4>
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            Tambah User
+        </button>
+    </div>
 
-            .container {
-                max-width: 95%;
-                margin: 0 auto;
-                padding: 24px;
-            }
+    <div class="card-body">
+        <table class="table table-hover" id="table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($users as $index => $user)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->role?->role_name }}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#roleModal{{ $user->id }}">
+                            Ganti Role
+                        </button>
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ $user->id }}">
+                            Hapus
+                        </button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 
-            h1 {
-                font-size: 26px;
-                font-weight: 600;
-                color: #1f2937;
-                margin-bottom: 16px;
-            }
-
-            .controls {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-bottom: 24px;
-                align-items: center;
-            }
-
-            select,
-            button {
-                padding: 8px 12px;
-                font-size: 14px;
-                border: 1px solid #d1d5db;
-                border-radius: 6px;
-                background-color: #fff;
-                cursor: pointer;
-            }
-
-            button {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-
-            .btn-export {
-                background-color: #10b981;
-                color: white;
-                border: none;
-            }
-
-            .btn-import {
-                background-color: #f59e0b;
-                color: white;
-                border: none;
-            }
-
-            .btn-add {
-                background-color: #3b82f6;
-                color: white;
-                border: none;
-            }
-
-            .btn-edit {
-                background-color: #2563eb;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                padding: 4px 8px;
-                font-size: 12px;
-            }
-
-            .btn-delete {
-                background-color: #dc2626;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                padding: 4px 8px;
-                font-size: 12px;
-            }
-
-            .btn-export:hover {
-                background-color: #059669;
-            }
-
-            .btn-import:hover {
-                background-color: #d97706;
-            }
-
-            .btn-add:hover {
-                background-color: #1d4ed8;
-            }
-
-            .btn-edit:hover {
-                background-color: #1d4ed8;
-            }
-
-            .btn-delete:hover {
-                background-color: #991b1b;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                background: white;
-                border: 1px solid #e5e7eb;
-                border-radius: 8px;
-                overflow: hidden;
-                font-size: 13px;
-            }
-
-            th,
-            td {
-                border: 1px solid #e5e7eb;
-                text-align: center;
-                padding: 6px;
-            }
-
-            th {
-                background-color: #f3f4f6;
-                font-weight: 600;
-                color: #374151;
-                position: sticky;
-                top: 0;
-                z-index: 1;
-            }
-
-            td.S {
-                background-color: #dbeafe;
-                color: #1e3a8a;
-                font-weight: 600;
-            }
-
-            td.I {
-                background-color: #fef3c7;
-                color: #92400e;
-                font-weight: 600;
-            }
-
-            td.A {
-                background-color: #fee2e2;
-                color: #991b1b;
-                font-weight: 600;
-            }
-
-            .total-cell {
-                font-weight: 600;
-                background-color: #f9fafb;
-            }
-
-            .scroll-x {
-                overflow-x: auto;
-            }
-
-            @media (max-width: 992px) {
-                table {
-                    font-size: 12px;
-                }
-            }
-        </style>
-    </head>
-
-    <body>
-        <div class="container">
-            <h1>Rekap Absensi Siswa</h1>
-
-            <div class="controls">
-                <select id="semester">
-                    <option value="1">Semester 1</option>
-                    <option value="2">Semester 2</option>
-                </select>
-
-                <select id="bulan">
-                    @php
-                        $bulan = [
-                            'Januari',
-                            'Februari',
-                            'Maret',
-                            'April',
-                            'Mei',
-                            'Juni',
-                            'Juli',
-                            'Agustus',
-                            'September',
-                            'Oktober',
-                            'November',
-                            'Desember',
-                        ];
-                    @endphp
-                    @foreach ($bulan as $b)
-                        <option value="{{ $b }}">{{ $b }}</option>
-                    @endforeach
-                </select>
-
-                <select id="tahun">
-                    @for ($i = 2020; $i <= date('Y'); $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                    @endfor
-                </select>
-
-                <button class="btn-export">
-                    <i class="bi bi-download"></i> Export
-                </button>
-
-                <button class="btn-import">
-                    <i class="bi bi-upload"></i> Import
-                </button>
-
-                <button class="btn-add">
-                    <i class="bi bi-person-plus"></i> Add User
-                </button>
+{{-- Modal Tambah User --}}
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah User Baru</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div class="scroll-x">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            @for ($i = 1; $i <= 30; $i++)
-                                <th>{{ $i }}</th>
-                            @endfor
-                            <th>Total S</th>
-                            <th>Total I</th>
-                            <th>Total A</th>
-                            <th>Action</th>
+            <div class="modal-body">
+                <form action="{{ route('users.store') }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Nama</label>
+                        <input type="text" name="name" class="form-control" required value="{{ old('name') }}">
+                    </div>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $siswa = ['Andi', 'Budi', 'Citra', 'Dewi', 'Eka', 'Fajar', 'Gina'];
-                            $status = ['S', 'I', 'A', 'H', 'H', 'H', 'H', 'H']; // lebih banyak hadir
-                        @endphp
-                        @foreach ($siswa as $index => $nama)
-                            @php
-                                $rekap = [];
-                                $totalS = $totalI = $totalA = 0;
-                                for ($i = 1; $i <= 30; $i++) {
-                                    $val = $status[array_rand($status)];
-                                    $rekap[$i] = $val;
-                                    if ($val == 'S') {
-                                        $totalS++;
-                                    }
-                                    if ($val == 'I') {
-                                        $totalI++;
-                                    }
-                                    if ($val == 'A') {
-                                        $totalA++;
-                                    }
-                                }
-                            @endphp
-                            <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td style="text-align:left; padding-left:8px;">{{ $nama }}</td>
-                                @for ($i = 1; $i <= 30; $i++)
-                                    <td class="{{ $rekap[$i] }}">{{ $rekap[$i] }}</td>
-                                @endfor
-                                <td class="total-cell">{{ $totalS }}</td>
-                                <td class="total-cell">{{ $totalI }}</td>
-                                <td class="total-cell">{{ $totalA }}</td>
-                                <td><button class="btn-edit"><i class="bi bi-pencil-square"></i> Edit</button><button
-                                        class="btn-delete"><i class="bi bi-trash"></i> Delete</button></td>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required value="{{ old('email') }}">
+                    </div>
 
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select name="role_id" class="form-control" required>
+                            <option value="">Pilih Role</option>
+                            @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="text-end">
+                        <button class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </body>
+    </div>
+</div>
 
-    </html>
+{{-- Modal Hapus --}}
+@foreach ($users as $user)
+<div class="modal fade" id="deleteUserModal{{ $user->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Apakah yakin menghapus user <strong>{{ $user->name }}</strong>?
+                <p class="text-danger mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <form action="{{ route('users.destroy',$user->id) }}" method="POST">
+                    @csrf @method('DELETE')
+                    <button class="btn btn-danger">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+{{-- Modal Ganti Role --}}
+@foreach ($users as $user)
+<div class="modal fade" id="roleModal{{ $user->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ganti Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="text-secondary text-center mb-2">Mengubah role akan mempengaruhi hak akses user.</p>
+                <form action="{{ route('users.update-Role') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+
+                    <div class="mb-3">
+                        <label class="form-label">Pilih Role</label>
+                        <select name="role_id" class="form-control" required>
+                            <option value="">Pilih role</option>
+                            @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary w-100 mt-2">Ganti Role</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 @endsection

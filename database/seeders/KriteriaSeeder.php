@@ -17,8 +17,8 @@ class KriteriaSeeder extends Seeder
     public function run(): void
     {
         $kode = ["K00001", "K00002", "K00003", "K00004"];
-        $namaKriteria = ["Keaktifan", "Nilai Akademik", "kehadiran", "Kedisiplinan"];
-        $bobot = [0.1, 0.4, 0.3, 0.2];
+        $namaKriteria = ["Nilai Akademik","kehadiran", "kedisiplinan","Nilai Non Akademik"  ];
+        $bobot = [0.4, 0.3, 0.2, 0.1];
 
         foreach ($kode as $item => $value) {
             Kriteria::create([

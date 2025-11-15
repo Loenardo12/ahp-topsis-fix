@@ -211,16 +211,16 @@
                     @endfor
                 </select>
 
-                {{-- <button class="btn-export">
+                <button class="btn-export">
                     <i class="bi bi-download"></i> Export
-                </button> --}}
+                </button>
 
 
                 <div>
                     <a href="{{ route('import.absen.form') }}" class="btn btn-warning me-2"> <!-- Atau buat route baru yang menerima ID kelas -->
         <i class="bi bi-upload"></i> Import dari Excel
     </a>
-                    <a href="{{ route('absenkelas10.create', $kelas10_obj->id) }}" class="btn btn-success me-2">
+                    <a href="{{ route('absenkelas11.create', $kelas11_obj->id) }}" class="btn btn-success me-2">
                         <i class="bi bi-plus-circle me-1"></i>Add Absensi
                     </a>
                 </div>
@@ -243,15 +243,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($absenKelas10 as $index => $row)
+                        @forelse ($absenkelas11 as $index => $row)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                {{-- relasi ke model siswa kelas10 --}}
+                                {{-- relasi ke model siswa kelas11 --}}
                                 <td style="text-align:left; padding-left:8px;">
-                                    {{ $row->isikelas10->nama }}
+                                    {{ $row->isikelas11->nama }}
                                 </td>
                                 <td style="text-align:left; padding-left:8px;">
-                                    {{ $row->isikelas10->nisn }}
+                                    {{ $row->isikelas11->nisn }}
                                 </td>
                                 {{-- tampilkan semua tanggal --}}
                                 @for ($i = 1; $i <= 31; $i++)  <!-- Diperbaiki: konsisten sampai 31 -->
@@ -265,8 +265,8 @@
                                 <td class="total-cell">{{ $row->total_i }}</td>
                                 <td class="total-cell">{{ $row->total_a }}</td>
                                 <td>
-                                    <a href="{{ route('absenkelas10.edit', $row->id) }}" class="btn-edit">Edit</a>
-                                    <form action="{{ route('absenkelas10.destroy', $row->id) }}" style="display:inline;" method="POST">
+                                    <a href="{{ route('absenkelas11.edit', $row->id) }}" class="btn-edit">Edit</a>
+                                    <form action="{{ route('absenkelas11.destroy', $row->id) }}" style="display:inline;" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn-delete">Delete</button>

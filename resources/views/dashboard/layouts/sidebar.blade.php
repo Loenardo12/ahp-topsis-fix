@@ -39,12 +39,22 @@
                 <h6 class="px-4 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Master Data
                 </h6>
             </li>
+
+            @if(auth()->check() && auth()->user()->role && auth()->user()->role->role_name === 'superadmin')
+            <li>
+                <a href="{{ route('users.index') }}"
+                    class="flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/users*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300' }}">
+                    <i class="ri-user-3-fill mr-3 text-green-600 dark:text-green-400"></i>
+                    Data User
+                </a>
+            </li>
+            @endif
             <li class="relative">
                 <button id="dropdown-ahp"
                     class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300">
                     <span class="flex items-center">
                         <i class="ri-user-settings-fill mr-3 text-green-600 dark:text-green-400"></i>
-                        Siswa
+                        Input Kelas
                     </span>
                     <i class="ri-arrow-down-s-line transition-transform duration-200" id="arrow-ahp"></i>
                 </button>
@@ -53,21 +63,21 @@
                         <a href="/kelas10"
                             class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/alternatif*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">
                             <i class="ri-user-settings-fill mr-3 text-green-600 dark:text-green-400"></i>
-                            Kelas 10
+                            Input Kelas 10
                         </a>
                     </li>
                     <li>
                         <a href="/kelas11"
                             class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/penilaian*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">
                             <i class="ri-user-settings-fill mr-3 text-green-600 dark:text-green-400"></i>
-                            Kelas 11
+                            Input Kelas 11
                         </a>
                     </li>
                     <li>
                         <a href="/kelas12"
                             class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/perhitungan*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">
                             <i class="ri-user-settings-fill mr-3 text-green-600 dark:text-green-400"></i>
-                            Kelas 12
+                            Input Kelas 12
                         </a>
                     </li>
                 </ul>
@@ -77,7 +87,7 @@
                 <a href="{{ route('objek') }}"
                     class="flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/objek*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300' }}">
                     <i class="ri-user-3-fill mr-3 text-green-600 dark:text-green-400"></i>
-                    Pilih Kelas
+                    Pilih Kelas / beberapa siswa
                 </a>
             </li>
             <li>
@@ -95,45 +105,6 @@
                 </a>
             </li>
 
-            <!-- SPK Method AHP Section -->
-            <li class="mt-6">
-                <h6 class="px-4 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Metode AHP
-                </h6>
-            </li>
-            <li class="relative">
-                <button id="dropdown-ahp"
-                    class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300">
-                    <span class="flex items-center">
-                        <i class="ri-function-line mr-3 text-green-600 dark:text-green-400"></i>
-                        Metode AHP
-                    </span>
-                    <i class="ri-arrow-down-s-line transition-transform duration-200" id="arrow-ahp"></i>
-                </button>
-                <ul id="submenu-ahp" class="hidden ml-6 mt-2 space-y-1">
-                    <li>
-                        <a href="{{ route('alternatif') }}"
-                            class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/alternatif*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">
-                            <i class="ri-braces-fill mr-3 text-green-600 dark:text-green-400"></i>
-                            Alternatif
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('penilaian') }}"
-                            class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/penilaian*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">
-                            <i class="ri-survey-fill mr-3 text-green-600 dark:text-green-400"></i>
-                            Penilaian
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('perhitungan') }}"
-                            class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/perhitungan*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">
-                            <i class="ri-calculator-fill mr-3 text-green-600 dark:text-green-400"></i>
-                            Perhitungan
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
             <!-- SPK Method TOPSIS Section -->
             <li class="mt-6">
                 <h6 class="px-4 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Metode
@@ -144,11 +115,13 @@
                     class="flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300">
                     <span class="flex items-center">
                         <i class="ri-function-line mr-3 text-green-600 dark:text-green-400"></i>
-                        Perangkingan Siswa Otomatis
+                        Perangkingan Nilai Akademis Siswa
                     </span>
                     <i class="ri-arrow-down-s-line transition-transform duration-200" id="arrow-topsis"></i>
                 </button>
                 <ul id="submenu-topsis" class="hidden ml-6 mt-2 space-y-1">
+
+
                     <li>
                         <a href="{{ route('alternatif') }}"
                             class="flex items-center px-4 py-2 text-sm rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/alternatif*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 font-semibold' : 'text-gray-600 dark:text-gray-400' }}">

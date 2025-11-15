@@ -13,7 +13,7 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-body">
-          <form action="{{ route('import.absen.process') }}" method="POST" enctype="multipart/form-data">
+          <form id="import-form" action="{{ route('import.absen.process') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
@@ -27,18 +27,64 @@
             <!-- Div ini harus HILANG atau TIDAK TERLIHAT sebelum file dipilih -->
             <div class="mb-3" id="sheet-selection" style="display: none;">
               <label for="selected_sheet" class="form-label">Pilih Sheet</label>
-              <!-- Select ini harus kosong sebelum diisi oleh JS -->
               <select class="form-control @error('selected_sheet') is-invalid @enderror" id="selected_sheet" name="selected_sheet" required>
                 <option value="">-- Pilih Sheet --</option>
-                <!-- Opsi sheet akan diisi oleh JavaScript -->
               </select>
               @error('selected_sheet')
                 <div class="invalid-feedback">{{ $message }}</div>
               @enderror
             </div>
 
+            <!-- Input semester, bulan, tahun (muncul setelah sheet dipilih) -->
+            <div class="mb-3" id="input-info" style="display: none;">
+              <h5>Isi Informasi Absensi</h5>
+              <div class="row">
+                <div class="col-md-4">
+                  <label for="semester" class="form-label">Semester</label>
+                  <select class="form-control @error('semester') is-invalid @enderror" id="semester" name="semester" required>
+                    <option value="">Pilih</option>
+                    <option value="1">1 (Ganjil)</option>
+                    <option value="2">2 (Genap)</option>
+                  </select>
+                  @error('semester')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="col-md-4">
+                  <label for="bulan" class="form-label">Bulan</label>
+                  <select class="form-control @error('bulan') is-invalid @enderror" id="bulan" name="bulan" required>
+                    <option value="">Pilih</option>
+                    @php
+                      $bulanList = [
+                        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                      ];
+                    @endphp
+                    @foreach($bulanList as $b)
+                      <option value="{{ $b }}">{{ $b }}</option>
+                    @endforeach
+                  </select>
+                  @error('bulan')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+                <div class="col-md-4">
+                  <label for="tahun" class="form-label">Tahun</label>
+                  <select class="form-control @error('tahun') is-invalid @enderror" id="tahun" name="tahun" required>
+                    <option value="">Pilih</option>
+                    @for ($i = 2020; $i <= date('Y') + 1; $i++)
+                      <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                  </select>
+                  @error('tahun')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+                </div>
+              </div>
+            </div>
+
             <!-- Input hidden untuk ID kelas -->
-            <input type="hidden" name="kelas10_id" value="1"> <!-- Ganti "1" dengan ID kelas yang sesuai -->
+            <input type="hidden" name="kelas10_id" value="{{ $kelas10->id ?? 1 }}"> <!-- Ganti "1" dengan ID kelas yang sesuai -->
 
             <button type="submit" class="btn btn-primary" id="import-btn" disabled>Import Data</button>
           </form>
@@ -49,47 +95,35 @@
 </div>
 
 <script>
-// Pastikan script ini ada dan tidak ada error sebelumnya
-console.log("Script import.blade.php dimuat");
-
 // Ambil token CSRF dari meta tag
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-console.log("CSRF Token ditemukan:", csrfToken); // Debug
 
-// Pastikan elemen file input ditemukan
 const fileInput = document.getElementById('file_excel');
-console.log("Elemen file input ditemukan:", !!fileInput); // Debug
+const sheetSelectionDiv = document.getElementById('sheet-selection');
+const inputInfoDiv = document.getElementById('input-info');
+const sheetSelect = document.getElementById('selected_sheet');
+const importBtn = document.getElementById('import-btn');
 
 if (fileInput) {
     fileInput.addEventListener('change', function(event) {
-        console.log("Event 'change' pada file input dipicu"); // Debug
-
         const file = event.target.files[0];
-        const sheetSelectionDiv = document.getElementById('sheet-selection');
-        const sheetSelect = document.getElementById('selected_sheet');
-        const importBtn = document.getElementById('import-btn');
 
         if (file) {
-            console.log("File dipilih:", file.name); // Debug
             sheetSelect.innerHTML = '<option value="">Memuat sheet...</option>';
-            sheetSelectionDiv.style.display = 'block'; // Tampilkan div
+            sheetSelectionDiv.style.display = 'block';
+            inputInfoDiv.style.display = 'none'; // Sembunyikan dulu
             importBtn.disabled = true;
 
             const formData = new FormData();
             formData.append('file_excel', file);
-            formData.append('_token', csrfToken); // Sertakan token CSRF
+            formData.append('_token', csrfToken);
 
             fetch('{{ route("import.absen.getSheets") }}', {
                 method: 'POST',
                 body: formData,
             })
-            .then(response => {
-                console.log("Respons diterima, status:", response.status); // Debug
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log("Data JSON diterima:", data); // Debug
-
                 if(data.success) {
                     sheetSelect.innerHTML = '<option value="">-- Pilih Sheet --</option>';
                     data.sheets.forEach(function(sheet) {
@@ -98,20 +132,41 @@ if (fileInput) {
                         option.textContent = sheet;
                         sheetSelect.appendChild(option);
                     });
-                    importBtn.disabled = false;
+                    // Tampilkan input info setelah sheet dimuat
+                    inputInfoDiv.style.display = 'block';
+                    // Tapi tombol import tetap disabled sampai semua info diisi
+                    importBtn.disabled = true;
+
+                    // Event listener untuk memeriksa apakah semua input info telah diisi
+                    document.querySelectorAll('#semester, #bulan, #tahun').forEach(input => {
+                        input.addEventListener('change', function() {
+                            const semester = document.getElementById('semester').value;
+                            const bulan = document.getElementById('bulan').value;
+                            const tahun = document.getElementById('tahun').value;
+
+                            if (semester && bulan && tahun) {
+                                importBtn.disabled = false;
+                            } else {
+                                importBtn.disabled = true;
+                            }
+                        });
+                    });
+
                 } else {
                     sheetSelect.innerHTML = '<option value="">Gagal: ' + (data.message || 'Unknown error') + '</option>';
+                    inputInfoDiv.style.display = 'none';
                     importBtn.disabled = true;
                 }
             })
             .catch(error => {
-                console.error('Error fetching sheets:', error); // Log error
+                console.error('Error fetching sheets:', error);
                 sheetSelect.innerHTML = '<option value="">Error: ' + error.message + '</option>';
+                inputInfoDiv.style.display = 'none';
                 importBtn.disabled = true;
             });
         } else {
-            console.log("File dibatalkan atau dihapus"); // Debug
             sheetSelectionDiv.style.display = 'none';
+            inputInfoDiv.style.display = 'none';
             importBtn.disabled = true;
         }
     });

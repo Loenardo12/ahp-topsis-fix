@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>| Sistem Pendukung Keputusan Prestasi Siswa</title>
+    <title>| BK Sistem Pendukung Keputusan Prestasi Siswa SMA Negeri 1 Pronojiwo</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -33,18 +33,10 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
                         <i data-feather="award" class="text-indigo-600 h-8 w-8"></i>
-                        <span class="ml-2 text-xl font-bold text-indigo-600">Sistem Pendukung Keputusan Prestasi Siswa</span>
+                        <span class="ml-2 text-xl font-bold text-indigo-600">BK Sistem Pendukung Keputusan Prestasi Siswa</span>
                     </div>
                 </div>
-                {{-- <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
-                    <a href="#" class="text-indigo-600 font-medium hover:text-indigo-500">Beranda</a>
-                    <a href="#" class="text-gray-500 hover:text-gray-700 font-medium">Tentang</a>
-                    <a href="#" class="text-gray-500 hover:text-gray-700 font-medium">Metodologi</a>
-                    <a href="#" class="text-gray-500 hover:text-gray-700 font-medium">Hasil Analisis</a>
-                    <a href="#" class="px-4 py-2 border border-transparent rounded-md text-white bg-indigo-600 hover:bg-indigo-700 font-medium">
-                        Masuk
-                    </a>
-                </div> --}}
+
                 <div class="-mr-2 flex items-center md:hidden">
                     <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                         <i data-feather="menu"></i>
@@ -61,11 +53,11 @@
                 <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 lg:mt-16 lg:px-8 xl:mt-20">
                     <div class="sm:text-center lg:text-left">
                         <h1 class="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl">
-                            <span class="block">Sistem Pendukung Keputusan</span>
+                            <span class="block">BK Sistem Pendukung Keputusan</span>
                             <span class="block text-indigo-200">Prestasi Siswa SMA Negeri 1 Pronojiwo</span>
                         </h1>
                         <p class="mt-3 text-base text-indigo-100 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                            Menggunakan metode AHP dan TOPSIS untuk menentukan perankingan siswa secara objektif berdasarkan kriteria penilaian multidimensi.
+                            Menggunakan metode AHP dan TOPSIS untuk menentukan perankingan siswa secara objektif berdasarkan kriteria penilaian multidimensi, dengan dukungan Bimbingan dan Konseling untuk pengembangan potensi siswa.
                         </p>
                         <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                             <div class="rounded-md shadow">
@@ -73,11 +65,7 @@
                                     Mulai Analisis
                                 </a>
                             </div>
-                            {{-- <div class="mt-3 sm:mt-0 sm:ml-3">
-                                <a href="#" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-70 md:py-4 md:text-lg md:px-10">
-                                    Pelajari Metode
-                                </a>
-                            </div> --}}
+
                         </div>
                     </div>
                 </main>
@@ -94,28 +82,17 @@
             <div class="lg:text-center">
                 <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Fitur Unggulan</h2>
                 <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                    Solusi Komprehensif Analisis Prestasi Siswa
+                    Solusi Komprehensif Analisis Prestasi Siswa dengan Dukungan BK
                 </p>
                 <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                    Sistem kami menggabungkan dua metode pengambilan keputusan terbaik untuk hasil yang optimal
+                    Sistem kami menggabungkan dua metode pengambilan keputusan terbaik untuk hasil yang optimal, serta integrasi dengan layanan Bimbingan dan Konseling untuk mendukung perkembangan siswa.
                 </p>
             </div>
 
             <div class="mt-10">
                 <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Feature 1 -->
-                    <div class="feature-card transition-all duration-300 ease-in-out rounded-lg bg-gray-50 p-6 shadow-md">
-                        <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                            <i data-feather="layers"></i>
-                        </div>
-                        <div class="mt-5">
-                            <h3 class="text-lg font-medium text-gray-900">Metode AHP</h3>
-                            <p class="mt-2 text-base text-gray-500">
-                                Analytical Hierarchy Process untuk menentukan bobot kriteria secara konsisten dengan pairwise comparison matrix.
-                            </p>
-                        </div>
-                    </div>
-
+                    
                     <!-- Feature 2 -->
                     <div class="feature-card transition-all duration-300 ease-in-out rounded-lg bg-gray-50 p-6 shadow-md">
                         <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
@@ -124,7 +101,7 @@
                         <div class="mt-5">
                             <h3 class="text-lg font-medium text-gray-900">Metode TOPSIS</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                Technique for Order Preference by Similarity to Ideal Solution untuk perankingan alternatif berdasarkan kedekatan dengan solusi ideal.
+                                Technique for Order Preference by Similarity to Ideal Solution untuk perankingan alternatif berdasarkan kedekatan dengan solusi ideal, mendukung rekomendasi BK.
                             </p>
                         </div>
                     </div>
@@ -137,7 +114,7 @@
                         <div class="mt-5">
                             <h3 class="text-lg font-medium text-gray-900">Visualisasi Data</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                Dashboard interaktif dengan grafik dan tabel untuk memahami hasil analisis secara komprehensif.
+                                Dashboard interaktif dengan grafik dan tabel untuk memahami hasil analisis secara komprehensif, memudahkan BK dalam monitoring siswa.
                             </p>
                         </div>
                     </div>
@@ -150,7 +127,7 @@
                         <div class="mt-5">
                             <h3 class="text-lg font-medium text-gray-900">Laporan Otomatis</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                Generate laporan analisis lengkap dalam format PDF dengan satu klik untuk dokumentasi.
+                                Generate laporan analisis lengkap dalam format PDF dengan satu klik untuk dokumentasi dan laporan BK.
                             </p>
                         </div>
                     </div>
@@ -163,7 +140,7 @@
                         <div class="mt-5">
                             <h3 class="text-lg font-medium text-gray-900">Multi-User</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                Sistem mendukung multi-role (admin, guru, wali kelas) dengan hak akses berbeda.
+                                Sistem mendukung multi-role (admin, guru BK, wali kelas) dengan hak akses berbeda untuk kolaborasi efektif.
                             </p>
                         </div>
                     </div>
@@ -171,12 +148,12 @@
                     <!-- Feature 6 -->
                     <div class="feature-card transition-all duration-300 ease-in-out rounded-lg bg-gray-50 p-6 shadow-md">
                         <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                            <i data-feather="cloud"></i>
+                            <i data-feather="heart"></i>
                         </div>
                         <div class="mt-5">
-                            <h3 class="text-lg font-medium text-gray-900">Cloud-Based</h3>
+                            <h3 class="text-lg font-medium text-gray-900">Rekomendasi BK</h3>
                             <p class="mt-2 text-base text-gray-500">
-                                Akses dari mana saja melalui browser tanpa perlu instalasi software tambahan.
+                                Berdasarkan hasil analisis, sistem memberikan rekomendasi konseling personal untuk pengembangan potensi dan dukungan siswa.
                             </p>
                         </div>
                     </div>
@@ -185,73 +162,15 @@
         </div>
     </div>
 
-    <!-- CTA Section -->
-    {{-- <div class="relative z-10 bg-indigo-700">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
-            <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                <span class="block">Siap mengoptimalkan penilaian prestasi siswa?</span>
-                <span class="block text-indigo-200">Mulai gunakan sistem kami hari ini.</span>
-            </h2>
-            <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-                <div class="inline-flex rounded-md shadow">
-                    <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50">
-                        Daftar Sekarang
-                    </a>
-                </div>
-                <div class="ml-3 inline-flex rounded-md shadow">
-                    <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 bg-opacity-60 hover:bg-opacity-70">
-                        Hubungi Kami
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+
 
     <!-- Footer -->
     <footer class="relative z-10 bg-gray-800">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-            {{-- <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-                <div>
-                    <h3 class="text-white text-lg font-semibold">EduRank Pro</h3>
-                    <p class="mt-4 text-gray-300">
-                        Sistem Pendukung Keputusan untuk analisis prestasi siswa SMA Negeri 1 Pronojiwo dengan metode AHP dan TOPSIS.
-                    </p>
-                    <div class="mt-4 flex space-x-6">
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i data-feather="facebook"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i data-feather="twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-white">
-                            <i data-feather="instagram"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-8 md:col-span-2">
-                    <div>
-                        <h3 class="text-white text-sm font-semibold tracking-wider uppercase">Navigasi</h3>
-                        <ul class="mt-4 space-y-4">
-                            <li><a href="#" class="text-gray-300 hover:text-white">Beranda</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white">Tentang</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white">Metodologi</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white">Hasil Analisis</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-white text-sm font-semibold tracking-wider uppercase">Legal</h3>
-                        <ul class="mt-4 space-y-4">
-                            <li><a href="#" class="text-gray-300 hover:text-white">Kebijakan Privasi</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white">Syarat & Ketentuan</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white">FAQ</a></li>
-                            <li><a href="#" class="text-gray-300 hover:text-white">Kontak</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div> --}}
+
             <div class="mt-12 border-t border-gray-700 pt-8">
                 <p class="text-gray-400 text-sm text-center">
-                    &copy; 2025 Sistem Pendukung Keputusan Prestasi Siswa. All rights reserved. SMA Negeri 1 Pronojiwo.
+                    &copy; 2025 BK Sistem Pendukung Keputusan Prestasi Siswa. All rights reserved. SMA Negeri 1 Pronojiwo.
                 </p>
             </div>
         </div>

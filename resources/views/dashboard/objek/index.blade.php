@@ -6,11 +6,19 @@
             <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">
                 <div class="flex flex-row items-center justify-between p-6 pb-0 mb-4 bg-white border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                     <h6>Tabel {{ $judul }}</h6>
+
+
                     <div>
+                        <button type="button" id="deleteSelected" class="btn btn-danger btn-sm" style="display: none;">Hapus Terpilih</button>
                         <label for="add_button" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
                             <i class="ri-add-fill"></i>
                             Tambah {{ $judul }}
                         </label>
+
+                        <a href="{{ route('objek.pilihKelas') }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
+        <i class="ri-user-3-line"></i>
+        Pilih Kelas
+    </a>
                         <label for="import_button" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
                             <i class="ri-file-excel-line"></i>
                             Import Data
@@ -21,13 +29,20 @@
                     <table id="tabel_data" class="stripe hover" style="width:100%; padding-top: 1em; padding-bottom: 1em;">
                         <thead>
                             <tr>
-                                <th>Nama</th>
+                                <th>
+            <input type="checkbox" id="checkAll" class="form-check-input">Pilih Semua
+        </th>
+                                                                <th>Nama</th>
                                 <th>Aksi</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
                                 <tr>
+                                    <td>
+                <input type="checkbox" name="selected_ids[]" value="{{ $item->id }}" class="form-check-input row-check">
+            </td>
                                     <td>{{ $item->nama }}</td>
                                     <td class="flex gap-x-3">
                                         <label for="edit_button" class="cursor-pointer" onclick="return edit_button('{{ $item->id }}')">
@@ -36,6 +51,7 @@
                                         <button onclick="return delete_button('{{ $item->id }}', '{{ $item->nama }}');">
                                             <i class="ri-delete-bin-line text-xl"></i>
                                         </button>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -248,5 +264,86 @@
                 }
             })
         }
+
+        // Inisialisasi DataTable secara dinamis
+        
+
+        // Fungsi pilih semua
+        document.getElementById('checkAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.row-check');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            toggleDeleteButton();
+        });
+
+        // Fungsi toggle tombol hapus
+        function toggleDeleteButton() {
+            const checkedBoxes = document.querySelectorAll('.row-check:checked');
+            const deleteButton = document.getElementById('deleteSelected');
+            deleteButton.style.display = checkedBoxes.length > 0 ? 'inline-block' : 'none';
+        }
+
+        // Event listener untuk checkbox baris
+        document.querySelectorAll('.row-check').forEach(checkbox => {
+            checkbox.addEventListener('change', toggleDeleteButton);
+        });
+
+        // Fungsi hapus terpilih
+        document.getElementById('deleteSelected').addEventListener('click', function() {
+            const selectedIds = [];
+            document.querySelectorAll('.row-check:checked').forEach(checkbox => {
+                selectedIds.push(checkbox.value);
+            });
+
+            if (selectedIds.length === 0) {
+                Swal.fire({
+                    title: 'Tidak ada data yang dipilih',
+                    icon: 'warning',
+                    confirmButtonColor: '#6419E6',
+                    confirmButtonText: 'OK',
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                html:
+                    "<p>Data tidak dapat dipulihkan kembali!</p>" +
+                    "<div class='divider'></div>" +
+                    "<b>Jumlah data terpilih: " + selectedIds.length + "</b>",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#6419E6',
+                cancelButtonColor: '#F87272',
+                confirmButtonText: 'Hapus!',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Kirim ID yang dipilih ke server
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('objek.hapus.multiple') }}';
+                    form.style.display = 'none';
+
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+
+                    selectedIds.forEach(id => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'ids[]';
+                        input.value = id;
+                        form.appendChild(input);
+                    });
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+
+
     </script>
 @endsection
