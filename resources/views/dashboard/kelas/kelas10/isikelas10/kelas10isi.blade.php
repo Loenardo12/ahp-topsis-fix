@@ -2,7 +2,7 @@
 
 @section('container')
     <!DOCTYPE html>
-    <html lang="id">
+
 
     <head>
         <meta charset="UTF-8">
@@ -217,9 +217,10 @@
 
 
                 <div>
-                    <a href="{{ route('import.absen.form') }}" class="btn btn-warning me-2"> <!-- Atau buat route baru yang menerima ID kelas -->
-        <i class="bi bi-upload"></i> Import dari Excel
-    </a>
+                    <a href="{{ route('import.absen.form', ['kelas10_id' => $kelas10_obj->id]) }}"
+                        class="btn btn-warning me-2">
+                        <i class="bi bi-upload"></i> Import dari Excel
+                    </a>
                     <a href="{{ route('absenkelas10.create', $kelas10_obj->id) }}" class="btn btn-success me-2">
                         <i class="bi bi-plus-circle me-1"></i>Add Absensi
                     </a>
@@ -233,7 +234,8 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>NISN</th>
-                            @for ($i = 1; $i <= 31; $i++)  <!-- Diperbaiki: konsisten sampai 31 -->
+                            @for ($i = 1; $i <= 31; $i++)
+                                <!-- Diperbaiki: konsisten sampai 31 -->
                                 <th>{{ $i }}</th>
                             @endfor
                             <th>Total S</th>
@@ -254,7 +256,8 @@
                                     {{ $row->isikelas10->nisn }}
                                 </td>
                                 {{-- tampilkan semua tanggal --}}
-                                @for ($i = 1; $i <= 31; $i++)  <!-- Diperbaiki: konsisten sampai 31 -->
+                                @for ($i = 1; $i <= 31; $i++)
+                                    <!-- Diperbaiki: konsisten sampai 31 -->
                                     @php
                                         $field = "tanggal_$i";
                                         $nilai = $row->$field ?? '-';
@@ -266,7 +269,8 @@
                                 <td class="total-cell">{{ $row->total_a }}</td>
                                 <td>
                                     <a href="{{ route('absenkelas10.edit', $row->id) }}" class="btn-edit">Edit</a>
-                                    <form action="{{ route('absenkelas10.destroy', $row->id) }}" style="display:inline;" method="POST">
+                                    <form action="{{ route('absenkelas10.destroy', $row->id) }}" style="display:inline;"
+                                        method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn-delete">Delete</button>

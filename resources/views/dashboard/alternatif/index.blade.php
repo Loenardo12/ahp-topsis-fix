@@ -1,3 +1,5 @@
+{{-- resources/views/dashboard/alternatif/index.blade.php --}}
+
 @extends('dashboard.layouts.app')
 
 @section('container')
@@ -46,6 +48,11 @@
                                 <label class="label">
                                     <span class="label-text">Pilih Objek</span>
                                 </label>
+                                <div class="flex justify-between items-center mb-2"> <!-- Wrapper untuk tombol dan label -->
+                                    <button type="button" id="select_all_btn" class="btn btn-xs btn-outline btn-info">Pilih Semua</button>
+                                    <!-- Optional: Tambahkan tombol Batal Pilih Semua -->
+                                    <!-- <button type="button" id="deselect_all_btn" class="btn btn-xs btn-outline btn-warning ml-2">Batal Pilih Semua</button> -->
+                                </div>
                                 <select class="select select-bordered text-dark" name="objek_id[]" id="objek_id" multiple="multiple">
                                     {{-- <option disabled selected>Pilih Objek!</option> --}}
                                     @foreach ($objek as $item)
@@ -85,10 +92,31 @@
             .columns.adjust()
             .responsive.recalc();
 
-            $("#objek_id").select2({
+            // Inisialisasi Select2
+            const $select2Element = $("#objek_id").select2({
                 placeholder: "Select",
                 allowClear: true
             });
+
+            // Fungsi untuk tombol Pilih Semua
+            $('#select_all_btn').on('click', function() {
+                // Ambil semua nilai opsi yang tersedia
+                const allValues = $select2Element.find('option').map(function() {
+                    return this.value;
+                }).get(); // Menghasilkan array nilai
+
+                // Set nilai select2 ke semua nilai
+                $select2Element.val(allValues);
+
+                // Trigger event 'change' agar Select2 mengetahui bahwa nilai telah berubah
+                $select2Element.trigger('change.select2');
+            });
+
+            // (Opsional) Fungsi untuk tombol Batal Pilih Semua
+            // $('#deselect_all_btn').on('click', function() {
+            //     $select2Element.val(null).trigger('change.select2'); // Hapus semua pilihan
+            // });
+
         });
 
         @if (session()->has('berhasil'))
