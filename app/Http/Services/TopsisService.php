@@ -141,10 +141,14 @@ class TopsisService
     }
 
     // Hasil Topsis
-    public function getHasilTopsis()
+     public function getHasilTopsis()
     {
-        $data = $this->topsisRepository->getHasilTopsis();
-        return $data;
+        $data = $this->topsisRepository->getHasilTopsis(); // Ambil data dari repo yang sudah dimodifikasi
+
+        // Urutkan di sini sebelum dikembalikan (opsional, karena sudah diurutkan di repo)
+        // $sortedData = $data->sortByDesc('nilai')->values();
+
+        return $data; // Kembalikan data yang sudah berisi nama_kelas
     }
     public function simpanHasilTopsis($data)
     {
@@ -155,5 +159,9 @@ class TopsisService
         } elseif ($validate != null) {
             $this->topsisRepository->updateHasilTopsis($data);
         }
+    }
+    public function getAllMatriksKeputusan()
+    {
+        return $this->topsisRepository->getAllMatriksKeputusan();
     }
 }

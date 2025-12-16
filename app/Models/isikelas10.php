@@ -23,4 +23,5 @@ class IsiKelas10 extends Model
     {
         return $this->hasMany(AbsenKelas10::class, 'isi_kelas10_id');
     }
+
 }

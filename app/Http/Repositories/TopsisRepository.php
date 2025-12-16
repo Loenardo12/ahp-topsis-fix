@@ -3,7 +3,9 @@
 namespace App\Http\Repositories;
 
 use Carbon\Carbon;
+
 use Illuminate\Support\Facades\DB;
+
 
 class TopsisRepository
 {
@@ -247,13 +249,24 @@ class TopsisRepository
     }
 
     // Hasil Topsis
-    public function getHasilTopsis()
+     public function getHasilTopsis()
     {
+        // Ambil data hasil topsis dan join ke alternatif, objek, lalu ke isi_kelas10 dan kelas10
         $data = DB::table('hasil_solusi_topsis as hst')
-            ->join('alternatif as a', 'a.id', 'hst.alternatif_id')
-            ->join('objek as o', 'o.id', 'a.objek_id')
-            ->select('hst.*', 'o.nama as nama_objek')
-            ->orderBy('hst.id', 'asc')->get();
+            ->join('alternatif as a', 'a.id', '=', 'hst.alternatif_id')
+            ->join('objek as o', 'o.id', '=', 'a.objek_id')
+            // Join ke isi_kelas10 berdasarkan NAMA OBJEK (ini adalah asumsi, bisa juga berdasarkan NISN jika unik)
+            ->leftJoin('isi_kelas10 as ik10', 'ik10.nama', '=', 'o.nama') // LEFT JOIN untuk menangani jika siswa tidak ditemukan di isi_kelas10
+            ->leftJoin('modelkelas10s as mk10', 'mk10.id', '=', 'ik10.modelkelas10s_id') // LEFT JOIN ke kelas
+            ->select(
+                'hst.id as id',
+                'hst.nilai as nilai',
+                'hst.alternatif_id as alternatif_id',
+                'o.nama as nama_objek',
+                'mk10.title as nama_kelas' // Ambil nama kelas
+            )
+            ->orderBy('hst.nilai', 'desc') // Urutkan berdasarkan nilai TOPSIS descending
+            ->get();
 
         return $data;
     }
@@ -277,5 +290,16 @@ class TopsisRepository
             'nilai' => $data['nilai'],
             'updated_at' => Carbon::now(),
         ]);
+    }
+    public function getAllMatriksKeputusan()
+    {
+        // Ganti $this->matriksKeputusan->all(); dengan query builder
+        $data = DB::table('matriks_keputusan as mk') // Alias 'mk'
+            ->join('kriteria as k', 'k.id', '=', 'mk.kriteria_id') // Join dengan kriteria
+            ->select('mk.*', 'k.nama as nama_kriteria') // Pilih kolom dari matriks_keputusan dan nama kriteria
+            ->orderBy('mk.id', 'asc') // Urutkan jika perlu
+            ->get();
+
+        return $data;
     }
 }

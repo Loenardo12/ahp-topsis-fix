@@ -6,19 +6,16 @@
             <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">
                 <div class="flex flex-row items-center justify-between p-6 pb-0 mb-4 bg-white border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                     <h6>Tabel {{ $judul }}</h6>
-
-
                     <div>
                         <button type="button" id="deleteSelected" class="btn btn-danger btn-sm" style="display: none;">Hapus Terpilih</button>
                         <label for="add_button" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
                             <i class="ri-add-fill"></i>
                             Tambah {{ $judul }}
                         </label>
-
                         <a href="{{ route('objek.pilihKelas') }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
-        <i class="ri-user-3-line"></i>
-        Pilih Kelas
-    </a>
+                            <i class="ri-user-3-line"></i>
+                            Pilih Kelas
+                        </a>
                         <label for="import_button" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
                             <i class="ri-file-excel-line"></i>
                             Import Data
@@ -30,20 +27,21 @@
                         <thead>
                             <tr>
                                 <th>
-            <input type="checkbox" id="checkAll" class="form-check-input">Pilih Semua
-        </th>
-                                                                <th>Nama</th>
+                                    <input type="checkbox" id="checkAll" class="form-check-input">Pilih Semua
+                                </th>
+                                <th>Nama</th>
+                                <th>Kelas</th> <!-- Kolom baru untuk kelas -->
                                 <th>Aksi</th>
-
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
                                 <tr>
                                     <td>
-                <input type="checkbox" name="selected_ids[]" value="{{ $item->id }}" class="form-check-input row-check">
-            </td>
+                                        <input type="checkbox" name="selected_ids[]" value="{{ $item->id }}" class="form-check-input row-check">
+                                    </td>
                                     <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->kelas_nama }}</td> <!-- Tampilkan kelas di sini -->
                                     <td class="flex gap-x-3">
                                         <label for="edit_button" class="cursor-pointer" onclick="return edit_button('{{ $item->id }}')">
                                             <i class="ri-pencil-line text-xl"></i>
@@ -51,7 +49,6 @@
                                         <button onclick="return delete_button('{{ $item->id }}', '{{ $item->nama }}');">
                                             <i class="ri-delete-bin-line text-xl"></i>
                                         </button>
-
                                     </td>
                                 </tr>
                             @endforeach
@@ -266,7 +263,7 @@
         }
 
         // Inisialisasi DataTable secara dinamis
-        
+
 
         // Fungsi pilih semua
         document.getElementById('checkAll').addEventListener('change', function() {

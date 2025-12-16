@@ -19,12 +19,11 @@ class PenilaianService
         return $data;
     }
 
-   public function ubahGetData($alternatif_id)
-{
-    $data = $this->penilaianRepository->getDataByAlternatif($alternatif_id);
-    return $data;
-}
-
+   public function ubahGetData($alternatifId)
+    {
+        // Gunakan fungsi baru dari repository
+        return $this->penilaianRepository->getDataWithRelations($alternatifId);
+    }
 
     public function perbaruiPostData($request)
     {
@@ -37,5 +36,15 @@ class PenilaianService
     {
         $data = $this->penilaianRepository->addFromAlternatif($request[1]);
         return $data;
+    }
+
+    public function getAllWithRelations()
+    {
+        return $this->penilaianRepository->getAllWithSubKriteria();
+    }
+
+         public function getAlternatifIdsWithNames()
+    {
+        return $this->penilaianRepository->getAlternatifIdsWithNames();
     }
 }

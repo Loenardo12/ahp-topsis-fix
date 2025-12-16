@@ -6,6 +6,7 @@ use App\Models\Alternatif;
 use App\Models\Penilaian;
 use App\Models\Kriteria;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PenilaianRepository
 {
@@ -86,5 +87,33 @@ class PenilaianRepository
                 'updated_at' => Carbon::now(),
             ]);
         }
+    }
+
+    public function getDataWithRelations($alternatifId = null)
+    {
+        $query = $this->penilaian->with(['alternatif.objek', 'kriteria', 'subKriteria']);
+
+        if ($alternatifId) {
+            $query->where('alternatif_id', $alternatifId);
+        }
+
+        return $query->get();
+    }
+    public function getAllWithSubKriteria()
+    {
+        return $this->penilaian->with('subKriteria', 'kriteria', 'alternatif.objek')->get(); // Sesuaikan relasi
+    }
+
+    public function getAlternatifIdsWithNames()
+    {
+        // Ambil semua alternatif yang terkait dengan objek (siswa)
+        // Urutkan berdasarkan nama objek untuk navigasi yang konsisten
+        $alternatif = DB::table('alternatif as a')
+            ->join('objek as o', 'o.id', '=', 'a.objek_id')
+            ->select('a.id as alternatif_id', 'o.nama as nama_objek')
+            ->orderBy('o.nama', 'asc') // Urutkan berdasarkan nama siswa
+            ->get();
+
+        return $alternatif;
     }
 }

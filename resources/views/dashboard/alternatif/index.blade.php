@@ -18,6 +18,7 @@
                         <thead>
                             <tr>
                                 <th>Nama</th>
+                                <th>Kelas</th> <!-- Kolom baru untuk kelas -->
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -25,6 +26,7 @@
                             @foreach ($data as $item)
                                 <tr>
                                     <td>{{ $item->objek->nama }}</td>
+                                    <td>{{ $item->kelas_nama }}</td> <!-- Tampilkan kelas di sini -->
                                     <td class="flex gap-x-3">
                                         <button onclick="return delete_button('{{ $item->id }}', '{{ $item->objek->nama }}');">
                                             <i class="ri-delete-bin-line text-xl"></i>

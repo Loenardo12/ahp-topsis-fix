@@ -80,7 +80,8 @@
                                     <td>{{ $item->alternatif->objek->nama }}</td>
                                     @foreach ($penilaian->where('alternatif_id', $item->alternatif_id) as $value)
                                         <td>
-                                            @if ($value->subKriteria != null) {{ $value->subKriteria->nilai }} @endif
+                                            {{-- Tampilkan nilai_asli jika ada, jika tidak, tampilkan subKriteria->nilai --}}
+                                            {{ $value->nilai_asli ?? ($value->subKriteria ? $value->subKriteria->nilai : 'N/A') }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -89,6 +90,7 @@
                     </table>
                 </div>
             </div>
+
 
             {{-- Tabel Matriks Keputusan --}}
             <div class="relative flex flex-col min-w-0 mb-5 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">

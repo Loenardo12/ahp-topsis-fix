@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Models\Penilaian;
 use App\Models\Alternatif;
+use App\Models\IsiKelas10; //
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -19,9 +20,26 @@ class AlternatifRepository
 
     public function getAll()
     {
-        $data = $this->alternatif->with('objek')->orderBy('created_at', 'asc')->get();
+        // Ambil semua data alternatif dengan relasi objek
+        $alternatifData = $this->alternatif->with('objek')->orderBy('created_at', 'asc')->get();
 
-        return $data;
+        // Ambil semua data isi_kelas10 beserta kelasnya
+        $isiKelasData = IsiKelas10::with('kelas10')->get();
+
+        // Buat map dari nama siswa ke informasi kelas
+        $kelasMap = [];
+        foreach ($isiKelasData as $isi) {
+            // Gunakan nama siswa sebagai key
+            // Simpan informasi kelas (misalnya title dari kelas10)
+            $kelasMap[$isi->nama] = $isi->kelas10 ? $isi->kelas10->title : 'Kelas Tidak Ditemukan';
+        }
+
+        // Tambahkan informasi kelas ke setiap objek alternatif
+        foreach ($alternatifData as $alt) {
+            $alt->kelas_nama = $kelasMap[$alt->objek->nama] ?? 'Tidak Ada di Kelas'; // Gunakan nama dari objek terkait
+        }
+
+        return $alternatifData;
     }
 
     public function simpan($data)

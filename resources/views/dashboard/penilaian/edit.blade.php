@@ -1,43 +1,67 @@
+{{-- resources/views/dashboard/penilaian/edit.blade.php --}}
+
 @extends('dashboard.layouts.app')
 
 @section('container')
     <div class="flex flex-wrap -mx-3">
         <div class="flex-none w-full max-w-full px-3">
             <div class="card shadow-lg p-8 bg-white rounded-2xl" id="edit_form">
-
-                <form action="{{ route('penilaian.perbarui', $data->alternatif_id) }}" method="post" enctype="multipart/form-data">
+                <form id="edit-form" action="{{ route('penilaian.perbarui', $data->alternatif_id) }}" method="post" enctype="multipart/form-data">
                     <h3 class="font-bold text-lg">Ubah {{ $judul }}:
                         <span class="text-greenPrimary" id="title_form">{{ $data->alternatif->objek->nama }}</span>
                     </h3>
                     @csrf
                     <input type="text" name="alternatif_id" value="{{ $data->alternatif_id }}" hidden />
-                    @foreach ($subKriteria->unique('kriteria_id') as $item)
+
+                    @php
+                        // Ambil semua kriteria
+                        $kriteria = \App\Models\Kriteria::all();
+                        // Kelompokkan data penilaian berdasarkan kriteria_id untuk memudahkan pencarian
+                        $nilaiPerKriteria = $data2->pluck('nilai_asli', 'kriteria_id')->toArray();
+                    @endphp
+
+                    @foreach ($kriteria as $item)
                         <div class="form-control w-full max-w-xs">
                             <label class="label">
-                                <span class="label-text">Sub Kriteria: <span class="text-greenPrimary">{{ $item->kriteria->nama }}</span></span>
+                                <span class="label-text">Kriteria: <span class="text-greenPrimary">{{ $item->nama }}</span></span>
                             </label>
-                            <select class="select select-bordered text-dark" name="kriteria_id[]" id="kriteria_id[]">
-                                <option disabled selected>--Pilih--</option>
-                                @foreach ($subKriteria->where('kriteria_id', $item->kriteria_id) as $value)
-                                    @php
-                                        // Ambil sub_kriteria_id dari array yang telah dibuat di controller
-                                        $selectedSubKriteriaId = $nilai_per_kriteria[$item->kriteria_id] ?? null;
-                                    @endphp
-                                    <option value="{{ $value->id }}" {{ $value->id == $selectedSubKriteriaId ? 'selected' : '' }}>
-                                        {{ $value->nama }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <input
+                                type="number"
+                                name="nilai_asli[{{ $item->id }}]" // Gunakan id kriteria sebagai key
+                                value="{{ old('nilai_asli.'.$item->id, $nilaiPerKriteria[$item->id] ?? '') }}" // Ambil nilai dari array $nilaiPerKriteria
+                                min="0"
+                                max="100"
+                                class="input input-bordered text-dark w-full max-w-xs"
+                                required
+                            />
                             <label class="label">
-                                @error('sub_kriteria_id')
+                                @error('nilai_asli.'.$item->id)
                                     <span class="label-text-alt text-error">{{ $message }}</span>
                                 @enderror
                             </label>
                         </div>
                     @endforeach
+
                     <div class="modal-action">
-                        <button type="submit" class="btn btn-success">Perbarui</button>
-                        <a href="{{ route('penilaian') }}" class="btn">Batal</a>
+                        <!-- Tombol Perbarui (Submit Form ke route yang sama) -->
+                        <button type="submit" name="action" value="update" class="btn btn-success">Perbarui</button>
+
+                        <!-- Tombol Previous -->
+                        @if($prevId)
+                            <button type="submit" name="action" value="previous" formaction="{{ route('penilaian.ubah', $prevId) }}" class="btn btn-secondary">Previous</button>
+                        @else
+                            <button type="button" class="btn btn-secondary" disabled>Previous</button>
+                        @endif
+
+                        <!-- Tombol Next -->
+                        @if($nextId)
+                            <button type="submit" name="action" value="next" formaction="{{ route('penilaian.ubah', $nextId) }}" class="btn btn-primary">Next</button>
+                        @else
+                            <button type="button" class="btn btn-primary" disabled>Next</button>
+                        @endif
+
+                        <!-- Tombol Back -->
+                        <a href="{{ route('penilaian') }}" class="btn">Back</a>
                     </div>
                 </form>
             </div>

@@ -129,21 +129,31 @@ class TopsisController extends Controller
 
     public function hitungMatriksKeputusan()
     {
-        $penilaian = $this->penilaianService->getAll();
-        foreach ($penilaian->unique('kriteria_id') as $item) {
-            $penilaianKriteria = $penilaian->where('kriteria_id', $item->kriteria_id);
+        // Ambil penilaian dengan relasi yang diperlukan
+        $penilaian = $this->penilaianService->getAllWithRelations(); // Gunakan fungsi baru
+
+        // Group by kriteria_id
+        $penilaianPerKriteria = $penilaian->groupBy('kriteria_id');
+
+        foreach ($penilaianPerKriteria as $kriteriaId => $penilaianKriteria) { // Gunakan $kriteriaId dari key loop
             $hitungMatriks = 0;
 
             foreach ($penilaianKriteria as $value) {
-                if ($value->sub_kriteria_id == null) {
-                    abort(403, "Masukkan nilai alternatif ". $value->alternatif->objek->nama ."!");
+                // Gunakan nilai_asli jika tersedia, jika tidak, gunakan subKriteria->nilai, jika tidak juga, default ke 0
+                $nilai = $value->nilai_asli ?? ($value->subKriteria ? $value->subKriteria->nilai : 0);
+
+                // Validasi apakah nilai valid untuk perhitungan (bukan null atau string kosong jika default 0 tidak digunakan)
+                if ($nilai === null || $nilai === '') {
+                    \Log::warning("Nilai untuk alternatif_id {$value->alternatif_id}, kriteria_id {$kriteriaId} kosong. Diberi nilai default 0.");
+                    $nilai = 0; // Atau handle sesuai kebijakan Anda
                 }
-                $hitungMatriks += pow($value->subKriteria->nilai, 2);
+
+                $hitungMatriks += pow($nilai, 2); // <-- Perbaikan: Gunakan $nilai, bukan $value->subKriteria->nilai
             }
 
             $hitungMatriks = sqrt($hitungMatriks);
             $data = [
-                'kriteria_id' => $item->kriteria_id,
+                'kriteria_id' => $kriteriaId, // <-- Perbaikan: Gunakan $kriteriaId, bukan $value->kriteria_id dari loop dalam
                 'nilai' => $hitungMatriks,
             ];
 
@@ -151,22 +161,38 @@ class TopsisController extends Controller
         }
     }
 
+
     public function hitungMatriksNormalisasi()
     {
-        $penilaian = $this->penilaianService->getAll();
-        foreach ($penilaian->unique('kriteria_id') as $item) {
-            $penilaianKriteria = $penilaian->where('kriteria_id', $item->kriteria_id);
-            $matriksKeputusan = $this->topsisServices->getMatriksKeputusanKriteria($item->kriteria_id);
+        // Ambil penilaian dengan relasi
+        $penilaian = $this->penilaianService->getAllWithRelations(); // Gunakan fungsi baru
+        $matriksKeputusan = $this->topsisServices->getAllMatriksKeputusan(); // Ambil semua matriks keputusan
 
-            foreach ($penilaianKriteria as $value) {
-                $matriksNormalisasi = $value->subKriteria->nilai / $matriksKeputusan->nilai;
-                $data = [
-                    'nilai' => $matriksNormalisasi,
-                    'kriteria_id' => $value->kriteria_id,
-                    'alternatif_id' => $value->alternatif_id,
-                ];
-                $this->topsisServices->simpanMatriksNormalisasi($data);
+        foreach ($penilaian as $value) {
+            // Cari nilai matriks keputusan untuk kriteria ini
+            $matriksKeputusanItem = $matriksKeputusan->firstWhere('kriteria_id', $value->kriteria_id);
+
+            if (!$matriksKeputusanItem || $matriksKeputusanItem->nilai == 0) {
+                // Jika matriks keputusan untuk kriteria ini tidak ditemukan atau nilainya 0, hindari pembagian dengan nol
+                \Log::warning("Matriks keputusan untuk kriteria {$value->kriteria_id} tidak ditemukan atau bernilai 0. Nilai normalisasi diatur ke 0.");
+                $matriksNormalisasi = 0;
+            } else {
+                // Gunakan nilai_asli untuk pembilang
+                $nilaiAsli = $value->nilai_asli ?? ($value->subKriteria ? $value->subKriteria->nilai : 0);
+                if ($nilaiAsli === null || $nilaiAsli === '') {
+                     \Log::warning("Nilai asli untuk alternatif_id {$value->alternatif_id}, kriteria_id {$value->kriteria_id} kosong. Diberi nilai default 0 untuk normalisasi.");
+                     $nilaiAsli = 0;
+                }
+                // Perbaikan: Gunakan $matriksKeputusanItem->nilai, bukan $matriksKeputusanItem->nilai (yg salah)
+                $matriksNormalisasi = $nilaiAsli / $matriksKeputusanItem->nilai; // <-- Pastikan $matriksKeputusanItem tidak null
             }
+
+            $data = [
+                'nilai' => $matriksNormalisasi,
+                'kriteria_id' => $value->kriteria_id,
+                'alternatif_id' => $value->alternatif_id,
+            ];
+            $this->topsisServices->simpanMatriksNormalisasi($data);
         }
     }
 
@@ -292,4 +318,5 @@ class TopsisController extends Controller
             $hitung = [];
         }
     }
+
 }
