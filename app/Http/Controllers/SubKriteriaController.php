@@ -57,7 +57,10 @@ class SubKriteriaController extends Controller
     public function ubah(Request $request)
     {
         $data = $this->subKriteriaService->ubahGetData($request);
-        return $data;
+        // Karena $data adalah model Eloquent, Laravel otomatis akan mengubahnya ke JSON saat direturn
+        // Pastikan kriteria_id juga disertakan dalam response JSON
+        // Model SubKriteria seharusnya sudah menyertakan kriteria_id karena kita mengambilnya dari database
+        return $data; // JSON akan berisi id, nama, nilai_min, nilai_max, bobot, kriteria_id, dll.
     }
 
     public function perbarui(SubKriteriaUpdateRequest $request)

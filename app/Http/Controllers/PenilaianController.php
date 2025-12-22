@@ -90,7 +90,7 @@ class PenilaianController extends Controller
         $alternatifId = $request->alternatif_id;
         $nilaiAsliArray = $request->nilai_asli;
 
-        \DB::transaction(function () use ($alternatifId, $nilaiAsliArray) {
+        DB::transaction(function () use ($alternatifId, $nilaiAsliArray) {
             foreach ($nilaiAsliArray as $kriteriaId => $nilaiAsli) {
                 // Temukan atau buat record penilaian
                 $penilaian = Penilaian::updateOrCreate(

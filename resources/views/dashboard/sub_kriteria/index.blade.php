@@ -7,18 +7,20 @@
                 @foreach ($data as $item)
                     <div class="relative flex flex-col min-w-0 mb-5 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">
                         <div class="flex flex-row items-center justify-between p-6 pb-0 mb-4 bg-white border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                            <h6>Tabel Nilai Kriteria <span class="text-greenPrimary">{{ $item['kriteria'] }}</span><p>Masukan bobot kriteria seperti <ul><li>sangat baik (9)</li><li>baik (8) <li>cukup baik (7) <li>kurang baik (6)  <li>tidak baik (5)</li></ul></p></h6>
-                            <label for="add_button" id="label_{{ $item['kriteria'] }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
+                            <h6>Tabel Nilai Kriteria <span class="text-greenPrimary">{{ $item['kriteria'] }}</span><p>Masukan rentang nilai dan bobot kriteria seperti <ul><li>sangat baik (90-100, bobot 9)</li><li>baik (80-89, bobot 8) <li>cukup baik (70-79, bobot 7) <li>kurang baik (60-69, bobot 6)  <li>tidak baik (50-59, bobot 5)</li></ul></p></h6>
+                            <label for="add_button" id="label_{{ $item['kriteria_id'] }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
                                 <i class="ri-add-fill"></i>
                                 Tambah {{ $judul }}
                             </label>
                         </div>
                         <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
-                            <table id="{{ 'tabel_data_' . $item['kriteria'] }}" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+                            <table id="{{ 'tabel_data_' . $item['kriteria_id'] }}" class="stripe hover" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
                                 <thead>
                                     <tr>
                                         <th>Nama</th>
-                                        <th>Nilai</th>
+                                        <th>Nilai Min</th> <!-- Ganti header -->
+                                        <th>Nilai Max</th> <!-- Ganti header -->
+                                        <th>Bobot</th>     <!-- Ganti header -->
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -26,7 +28,9 @@
                                     @foreach ($item['sub_kriteria'] as $subKriteria)
                                         <tr>
                                             <td>{{ $subKriteria['nama'] }}</td>
-                                            <td>{{ $subKriteria['nilai'] }}</td>
+                                            <td>{{ $subKriteria['nilai_min'] }}</td> <!-- Ganti $subKriteria['nilai'] -->
+                                            <td>{{ $subKriteria['nilai_max'] }}</td> <!-- Ganti $subKriteria['nilai'] -->
+                                            <td>{{ $subKriteria['bobot'] }}</td>     <!-- Ganti $subKriteria['nilai'] -->
                                             <td class="flex gap-x-3">
                                                 <label for="edit_button" class="cursor-pointer" onclick="return edit_button('{{ $subKriteria['id'] }}')">
                                                     <i class="ri-pencil-line text-xl"></i>
@@ -71,7 +75,7 @@
                     <form action="{{ route('sub_kriteria.simpan') }}" method="post" enctype="multipart/form-data">
                         <h3 class="font-bold text-lg">Tambah {{ $judul }} <span class="text-greenPrimary" id="title_add_button"></span></h3>
                             @csrf
-                            <input type="number" name="kriteria_id" id="kriteria_id_add_button" hidden>
+                            <input type="number" name="kriteria_id" id="kriteria_id_add_button" value="{{ old('kriteria_id') }}" hidden>
                             <input type="text" name="kode" id="kode_add_button" value="kode" hidden>
                             <div class="form-control w-full max-w-xs">
                                 <label class="label">
@@ -86,11 +90,33 @@
                             </div>
                             <div class="form-control w-full max-w-xs">
                                 <label class="label">
-                                    <span class="label-text">Nilai</span>
+                                    <span class="label-text">Nilai Min</span> <!-- Ganti label -->
                                 </label>
-                                <input type="number" name="nilai" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" value="{{ old('nilai') }}" required />
+                                <input type="number" name="nilai_min" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" value="{{ old('nilai_min') }}" min="0" max="100" required /> <!-- Ganti name dan tambahkan min/max -->
                                 <label class="label">
-                                    @error('nilai')
+                                    @error('nilai_min')
+                                        <span class="label-text-alt text-error">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                            </div>
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Nilai Max</span> <!-- Ganti label -->
+                                </label>
+                                <input type="number" name="nilai_max" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" value="{{ old('nilai_max') }}" min="0" max="100" required /> <!-- Ganti name dan tambahkan min/max -->
+                                <label class="label">
+                                    @error('nilai_max')
+                                        <span class="label-text-alt text-error">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                            </div>
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Bobot</span> <!-- Ganti label -->
+                                </label>
+                                <input type="number" name="bobot" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" value="{{ old('bobot') }}" min="0" max="100" required /> <!-- Ganti name dan tambahkan min/max -->
+                                <label class="label">
+                                    @error('bobot')
                                         <span class="label-text-alt text-error">{{ $message }}</span>
                                     @enderror
                                 </label>
@@ -104,6 +130,7 @@
                 <label class="modal-backdrop" for="add_button">Close</label>
             </div>
 
+
             {{-- Form Ubah Data --}}
             <input type="checkbox" id="edit_button" class="modal-toggle" />
             <div class="modal">
@@ -112,6 +139,7 @@
                         <h3 class="font-bold text-lg">Ubah {{ $judul }}: <span class="text-greenPrimary" id="title_form"><span class="loading loading-dots loading-md"></span></span></h3>
                             @csrf
                             <input type="text" name="id" hidden />
+                            <input type="number" name="kriteria_id" hidden id="kriteria_id_edit" /> {{-- Tambahkan ini --}}
                             <div class="form-control w-full max-w-xs">
                                 <label class="label">
                                     <span class="label-text">Nama</span>
@@ -126,12 +154,36 @@
                             </div>
                             <div class="form-control w-full max-w-xs">
                                 <label class="label">
-                                    <span class="label-text">Nilai</span>
+                                    <span class="label-text">Nilai Min</span>
                                     <span class="label-text-alt" id="loading_edit2"></span>
                                 </label>
-                                <input type="number" name="nilai" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" required />
+                                <input type="number" name="nilai_min" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" min="0" max="100" required />
                                 <label class="label">
-                                    @error('nilai')
+                                    @error('nilai_min')
+                                        <span class="label-text-alt text-error">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                            </div>
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Nilai Max</span>
+                                    <span class="label-text-alt" id="loading_edit3"></span>
+                                </label>
+                                <input type="number" name="nilai_max" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" min="0" max="100" required />
+                                <label class="label">
+                                    @error('nilai_max')
+                                        <span class="label-text-alt text-error">{{ $message }}</span>
+                                    @enderror
+                                </label>
+                            </div>
+                            <div class="form-control w-full max-w-xs">
+                                <label class="label">
+                                    <span class="label-text">Bobot</span>
+                                    <span class="label-text-alt" id="loading_edit4"></span>
+                                </label>
+                                <input type="number" name="bobot" placeholder="Type here" class="input input-bordered w-full max-w-xs text-dark" min="0" max="100" required />
+                                <label class="label">
+                                    @error('bobot')
                                         <span class="label-text-alt text-error">{{ $message }}</span>
                                     @enderror
                                 </label>
@@ -144,6 +196,7 @@
                 </div>
                 <label class="modal-backdrop" for="edit_button">Close</label>
             </div>
+
 
         </div>
     </div>
@@ -205,41 +258,54 @@
             })
         @endif
 
+
         function edit_button(id) {
-            // Loading effect start
             let loading = `<span class="loading loading-dots loading-md text-greenPrimary"></span>`;
             $("#title_form").html(loading);
             $("#loading_edit1").html(loading);
             $("#loading_edit2").html(loading);
+            $("#loading_edit3").html(loading);
+            $("#loading_edit4").html(loading);
 
             $.ajax({
                 type: "get",
                 url: "{{ route('sub_kriteria.ubah') }}",
-                data: {
+                data: { // <-- Harusnya sudah diperbaiki sebelumnya
                     "_token": "{{ csrf_token() }}",
                     "id": id
                 },
-                success: function (data) {
-                    // console.log(data);
-                    let items = [];
-                    $.each(data, function(key, val) {
-                        items.push(val);
-                    });
+                success: function (response) {
+                    console.log("Data dari server:", response); // Logging
 
-                    // console.log(items);
-
-                    $("#title_form").html(`${items[7]['nama']}`);
-                    $("input[name='id']").val(items[0]);
-                    $("input[name='nama']").val(items[2]);
-                    $("input[name='nilai']").val(items[3]);
+                    // Gunakan properti dari object response langsung
+                    $("#title_form").html(response.nama);
+                    $("input[name='id']").val(response.id);
+                    $("input[name='kriteria_id']").val(response.kriteria_id); // <-- Tambahkan baris ini
+                    $("input[name='nama']").val(response.nama);
+                    $("input[name='nilai_min']").val(response.nilai_min);
+                    $("input[name='nilai_max']").val(response.nilai_max);
+                    $("input[name='bobot']").val(response.bobot);
 
                     // Loading effect end
                     loading = "";
                     $("#loading_edit1").html(loading);
                     $("#loading_edit2").html(loading);
+                    $("#loading_edit3").html(loading);
+                    $("#loading_edit4").html(loading);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching data for edit:", error);
+                    console.error("Response Text:", xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Gagal mengambil data untuk diedit. Silakan coba lagi.',
+                    });
                 }
             });
         }
+
+
 
         function delete_button(id, kriteria, nama) {
             Swal.fire({

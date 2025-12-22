@@ -21,6 +21,7 @@ class SubKriteriaService
 
     public function getWhereKriteria($kriteria_id)
     {
+        // Ini akan memanggil fungsi dari repository yang sudah kita perbaiki
         $data = $this->subKriteriaRepository->getWhereKriteria($kriteria_id);
         return $data;
     }
@@ -35,9 +36,15 @@ class SubKriteriaService
 
     public function ubahGetData($request)
     {
+        // Ambil data dari repository
         $data = $this->subKriteriaRepository->getDataById($request->id);
-        return $data;
+
+        // Kembalikan data sebagai array/object yang bisa diakses oleh AJAX
+        // Kita kembalikan seluruh objek model agar JavaScript bisa mengakses propertinya
+        return $data; // Kembalikan model SubKriteria
     }
+
+
 
     public function perbaruiPostData($request)
     {

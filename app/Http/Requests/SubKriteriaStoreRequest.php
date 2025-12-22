@@ -28,7 +28,9 @@ class SubKriteriaStoreRequest extends FormRequest
         return [
             "kode" => "required|string|max:255",
             "nama" => "required|string|max:255",
-            "nilai" => "required|numeric|min:0|max:9",
+            "nilai_min" => "required|integer|min:0|max:100", // Ganti "nilai" dengan ini
+            "nilai_max" => "required|integer|min:0|max:100|gte:nilai_min", // Tambahkan ini, pastikan max >= min
+            "bobot" => "required|integer|min:0|max:100", // Tambahkan ini
             "kriteria_id" => "required|numeric",
         ];
     }

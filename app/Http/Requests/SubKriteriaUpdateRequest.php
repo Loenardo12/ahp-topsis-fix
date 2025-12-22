@@ -25,8 +25,12 @@ class SubKriteriaUpdateRequest extends FormRequest
     public function rules()
     {
         return [
+            "id" => "required|exists:sub_kriteria,id", // Validasi ID jika perlu
             "nama" => "required|string|max:255",
-            "nilai" => "required|numeric|min:0|max:9",
+            "nilai_min" => "required|integer|min:0|max:100", // Tambahkan ini
+            "nilai_max" => "required|integer|min:0|max:100|gte:nilai_min", // Tambahkan ini, pastikan max >= min
+            "bobot" => "required|integer|min:0|max:100", // Tambahkan ini
+            "kriteria_id" => "required|exists:kriteria,id", // Tambahkan ini jika ingin divalidasi
         ];
     }
 }

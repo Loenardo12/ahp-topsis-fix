@@ -196,15 +196,19 @@ class TopsisController extends Controller
         }
     }
 
-    public function hitungMatriksY()
+   public function hitungMatriksY()
     {
+        // Ambil matriks normalisasi (R) dari proses sebelumnya, yang sekarang berisi nilai dari nilai_asli
         $matriksNormalisasi = $this->topsisServices->getMatriksNormalisasi();
         foreach ($matriksNormalisasi->unique('kriteria_id') as $item) {
             $matriksNormalisasiKriteria = $matriksNormalisasi->where('kriteria_id', $item->kriteria_id);
+            // Ambil bobot kriteria dari model Kriteria
             $bobotKriteria = $this->kriteriaService->getDataById($item->kriteria_id);
 
             foreach ($matriksNormalisasiKriteria as $value) {
-                $matriksY = $value->nilai * $bobotKriteria->bobot;
+                // Perhitungan Y = R * W (bobot kriteria)
+                // $value->nilai sekarang adalah nilai dari normalisasi R, yang berasal dari nilai_asli
+                $matriksY = $value->nilai * $bobotKriteria->bobot; // <-- Gunakan bobot dari Kriteria, bukan SubKriteria
                 $data = [
                     'nilai' => $matriksY,
                     'kriteria_id' => $value->kriteria_id,
