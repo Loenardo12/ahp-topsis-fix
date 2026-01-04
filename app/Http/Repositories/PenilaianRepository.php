@@ -21,7 +21,9 @@ class PenilaianRepository
 
     public function getAll()
     {
+        \Log::info('PenilaianRepository@getAll: Memulai pengambilan data');
         $data = $this->penilaian->with('alternatif', 'kriteria', 'subKriteria')->orderBy('id', 'asc')->get();
+        \Log::info('PenilaianRepository@getAll: Data diambil', $data->toArray()); // Log data
         return $data;
     }
 

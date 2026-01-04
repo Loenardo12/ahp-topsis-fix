@@ -150,6 +150,9 @@
             $('#tabel_data').DataTable({
                 responsive: true,
                 order: [],
+                lengthChange: false, 
+                paging: false,
+
             })
             .columns.adjust()
             .responsive.recalc();

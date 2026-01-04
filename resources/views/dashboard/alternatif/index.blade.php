@@ -8,15 +8,24 @@
             <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">
                 <div class="flex flex-row items-center justify-between p-6 pb-0 mb-4 bg-white border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                     <h6>Tabel {{ $judul }}<p>Masukan Siswa yang dipilih untuk dihitung mana yang terbaik </p></h6>
-                    <label for="add_button" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
-                        <i class="ri-add-fill"></i>
-                        Tambah {{ $judul }}
-                    </label>
+                    <div class="flex items-center space-x-2"> <!-- Wrapper untuk tombol -->
+                        <button id="hapus-multiple-btn" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-red-500 to-red-700 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all" disabled>
+                            <i class="ri-delete-bin-line"></i> <!-- Ikon hapus -->
+                            Hapus Terpilih
+                        </button>
+                        <label for="add_button" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
+                            <i class="ri-add-fill"></i>
+                            Tambah {{ $judul }}
+                        </label>
+                    </div>
                 </div>
                 <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
                     <table id="tabel_data" class="stripe hover" style="width:100%; padding-top: 1em; padding-bottom: 1em;">
                         <thead>
                             <tr>
+                                <th> <!-- Kolom checkbox header -->
+                                    <input type="checkbox" id="check-all" class="form-check-input" />
+                                </th>
                                 <th>Nama</th>
                                 <th>Kelas</th> <!-- Kolom baru untuk kelas -->
                                 <th>Aksi</th>
@@ -25,6 +34,9 @@
                         <tbody>
                             @foreach ($data as $item)
                                 <tr>
+                                    <td> <!-- Kolom checkbox baris -->
+                                        <input type="checkbox" name="selected_ids[]" value="{{ $item->id }}" class="row-check form-check-input" />
+                                    </td>
                                     <td>{{ $item->objek->nama }}</td>
                                     <td>{{ $item->kelas_nama }}</td> <!-- Tampilkan kelas di sini -->
                                     <td class="flex gap-x-3">
@@ -87,12 +99,13 @@
     <script>
         // Tabel
         $(document).ready(function() {
-            $('#tabel_data').DataTable({
+            // Inisialisasi DataTables
+            const table = $('#tabel_data').DataTable({
                 responsive: true,
                 order: [],
-            })
-            .columns.adjust()
-            .responsive.recalc();
+                 lengthChange: false,
+                paging: false,
+            });
 
             // Inisialisasi Select2
             const $select2Element = $("#objek_id").select2({
@@ -100,26 +113,145 @@
                 allowClear: true
             });
 
-            // Fungsi untuk tombol Pilih Semua
+            // Fungsi untuk tombol Pilih Semua (Select2)
             $('#select_all_btn').on('click', function() {
-                // Ambil semua nilai opsi yang tersedia
                 const allValues = $select2Element.find('option').map(function() {
                     return this.value;
-                }).get(); // Menghasilkan array nilai
-
-                // Set nilai select2 ke semua nilai
+                }).get();
                 $select2Element.val(allValues);
-
-                // Trigger event 'change' agar Select2 mengetahui bahwa nilai telah berubah
                 $select2Element.trigger('change.select2');
             });
 
-            // (Opsional) Fungsi untuk tombol Batal Pilih Semua
-            // $('#deselect_all_btn').on('click', function() {
-            //     $select2Element.val(null).trigger('change.select2'); // Hapus semua pilihan
-            // });
+            // --- LOGIKA CHECKBOX MASSAL DENGAN DATATABLES API ---
 
-        });
+            const $checkAll = $('#check-all'); // Checkbox header
+            const $hapusMultipleBtn = $('#hapus-multiple-btn'); // Tombol hapus massal
+
+            // Fungsi untuk memperbarui status tombol hapus
+            function updateHapusMultipleBtnStatus() {
+                // Hitung jumlah checkbox baris yang dicentang di semua halaman yang SESUAI PENCARIAN
+                const checkedCount = table.rows({ search: 'applied' }).nodes().to$().find('input.row-check:checked').length;
+                $hapusMultipleBtn.prop('disabled', checkedCount === 0); // Nonaktifkan jika tidak ada yang dipilih
+            }
+
+            // Event listener untuk checkbox header
+            $checkAll.on('change', function() {
+                const isChecked = this.checked;
+                // Temukan semua checkbox baris di semua halaman yang SESUAI PENCARIAN
+                const $rowCheckboxes = table.rows({ search: 'applied' }).nodes().to$().find('input.row-check');
+                $rowCheckboxes.prop('checked', isChecked); // Centang atau hapus centang semua
+
+                // Update status checkbox header (indeterminate jika sebagian dipilih)
+                const allChecked = $rowCheckboxes.length === $rowCheckboxes.filter(':checked').length;
+                $checkAll.prop('checked', allChecked);
+                $checkAll.prop('indeterminate', !allChecked && $rowCheckboxes.filter(':checked').length > 0);
+
+                updateHapusMultipleBtnStatus(); // Perbarui status tombol
+            });
+
+            // Event listener untuk checkbox baris (gunakan event delegation untuk menangani redraw)
+            $('#tabel_data tbody').on('change', 'input.row-check', function() {
+                // Update status checkbox header
+                const $allRowCheckboxes = table.rows({ search: 'applied' }).nodes().to$().find('input.row-check');
+                const allChecked = $allRowCheckboxes.length === $allRowCheckboxes.filter(':checked').length;
+                const someChecked = $allRowCheckboxes.filter(':checked').length > 0;
+
+                $checkAll.prop('checked', allChecked);
+                $checkAll.prop('indeterminate', !allChecked && someChecked);
+
+                updateHapusMultipleBtnStatus(); // Perbarui status tombol
+            });
+
+            // Event listener untuk tombol hapus massal
+            $hapusMultipleBtn.on('click', function() {
+                // Ambil ID dari semua checkbox baris yang dicentang di semua halaman yang SESUAI PENCARIAN
+                const selectedIds = table.rows({ search: 'applied' }).nodes().to$().find('input.row-check:checked').map(function() {
+                    return this.value;
+                }).get(); // Konversi ke array
+
+                if (selectedIds.length === 0) {
+                    Swal.fire({
+                        title: 'Tidak Ada Pilihan',
+                        text: 'Silakan pilih setidaknya satu data untuk dihapus.',
+                        icon: 'warning',
+                        confirmButtonColor: '#6419E6',
+                        confirmButtonText: 'OK',
+                    });
+                    return; // Hentikan eksekusi jika tidak ada yang dipilih
+                }
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: `Anda akan menghapus ${selectedIds.length} data.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#6419E6',
+                    cancelButtonColor: '#F87272',
+                    confirmButtonText: 'Hapus!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Kirim permintaan AJAX ke server untuk menghapus data
+                        $.ajax({
+                            url: "{{ route('alternatif.hapus.multiple') }}", // Gunakan route yang telah Anda buat
+                            type: 'POST',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                "ids": selectedIds // Kirim array ID
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#6419E6',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        location.reload(); // Muat ulang halaman untuk memperbarui data
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Gagal!',
+                                        text: response.message || 'Terjadi kesalahan.',
+                                        icon: 'error',
+                                        confirmButtonColor: '#6419E6',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error hapus massal:", error);
+                                console.error("Response Text:", xhr.responseText);
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: 'Terjadi kesalahan saat menghapus data.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#6419E6',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Event listener untuk redraw DataTables (pagination, search, etc.) untuk memperbarui status
+            table.on('draw', function() {
+                updateHapusMultipleBtnStatus();
+
+                // Perbarui status checkbox header saat tabel dirender ulang
+                const $allRowCheckboxes = table.rows({ search: 'applied' }).nodes().to$().find('input.row-check');
+                const allChecked = $allRowCheckboxes.length === $allRowCheckboxes.filter(':checked').length;
+                const someChecked = $allRowCheckboxes.filter(':checked').length > 0;
+
+                $checkAll.prop('checked', allChecked);
+                $checkAll.prop('indeterminate', !allChecked && someChecked);
+            });
+
+
+        }); // Akhir $(document).ready()
+
 
         @if (session()->has('berhasil'))
             Swal.fire({

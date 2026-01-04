@@ -198,6 +198,8 @@ Route::group([
         Route::get('/', [AlternatifController::class, 'index'])->name('alternatif');
         Route::post('/simpan', [AlternatifController::class, 'simpan'])->name('alternatif.simpan');
         Route::post('/hapus', [AlternatifController::class, 'hapus'])->name('alternatif.hapus');
+        Route::post('/hapus-multiple', [AlternatifController::class, 'hapusMultiple'])->name('alternatif.hapus.multiple');
+        Route::post('/alternatif/hapus-multiple', [AlternatifController::class, 'hapusMultiple'])->name('alternatif.hapus.multiple');
 
     });
 
@@ -209,7 +211,12 @@ Route::group([
         Route::get('/ubah/{alternatif_id}', [PenilaianController::class, 'ubah'])->name('penilaian.ubah');
         Route::post('/ubah/{alternatif_id}', [PenilaianController::class, 'perbarui'])->name('penilaian.perbarui');
         Route::post('/hapus', [PenilaianController::class, 'hapus'])->name('penilaian.hapus');
-
+        // Route untuk form import
+    Route::get('/import', [PenilaianController::class, 'showImportForm'])->name('penilaian.import.form');
+    // Route untuk proses import
+    Route::post('/import', [PenilaianController::class, 'import'])->name('penilaian.import');
+    // Route untuk mendapatkan sheet dari file
+    Route::post('/get-sheets', [PenilaianController::class, 'getSheets'])->name('penilaian.getSheets');
     });
 
     Route::get('/perhitungan', [TopsisController::class, 'index'])->name('perhitungan');

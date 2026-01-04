@@ -1,5 +1,3 @@
-
-
 @extends('dashboard.layouts.app')
 
 @section('container')
@@ -9,9 +7,15 @@
                 <div class="flex flex-row items-center justify-between p-6 pb-0 mb-4 bg-white border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                     <h6>Tabel {{ $judul }}<p>Masukan Bobot Penilaian Siswa </p></h6>
                     <div>
-                        <a href="{{ route('penilaian.simpan') }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all">
+                        <!-- Tombol Tambah Tetap Ada -->
+                        <a href="{{ route('penilaian.simpan') }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-greenPrimary to-greenPrimary/80 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all mr-2"> <!-- Tambahkan margin untuk jarak -->
                             <i class="ri-add-fill"></i>
                             Tambah {{ $judul }}
+                        </a>
+                        <!-- Tombol Import Baru -->
+                        <a href="{{ route('penilaian.import.form') }}" class="cursor-pointer inline-block px-3 py-2 font-bold text-center text-white rounded-lg text-sm ease-soft-in shadow-soft-md bg-gradient-to-br from-blue-500 to-blue-700 shadow-soft-md hover:shadow-soft-xs active:opacity-85 hover:scale-102 transition-all"> <!-- Gaya berbeda untuk import -->
+                            <i class="ri-upload-line"></i> <!-- Ikon upload -->
+                            Import {{ $judul }}
                         </a>
                     </div>
                 </div>
@@ -65,6 +69,8 @@
             $('#tabel_data').DataTable({
                 responsive: true,
                 order: [],
+                lengthChange: false,
+                paging: false,
             })
             .columns.adjust()
             .responsive.recalc();

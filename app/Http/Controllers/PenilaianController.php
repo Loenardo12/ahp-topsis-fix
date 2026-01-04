@@ -8,7 +8,10 @@ use App\Http\Services\SubKriteriaService;
 use App\Models\Kriteria; // Import model Kriteria
 use App\Models\Penilaian;
 use App\Models\Alternatif;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PenilaianImport;
 use Illuminate\Support\Facades\DB;
+use App\Imports\DebugImport; // Import DebugImport
 
 
 use App\Models\SubKriteria;
@@ -62,6 +65,18 @@ class PenilaianController extends Controller
             $nextId = $allAlternatif->get($currentIndex + 1)?->alternatif_id;
         }
 
+        // --- TAMBAHKAN INI ---
+        // Ambil semua sub-kriteria dan kelompokkan berdasarkan kriteria_id
+        $subKriteriaGrouped = SubKriteria::with('kriteria') // Opsional, jika ingin nama kriteria juga
+            ->get()
+            ->groupBy('kriteria_id')
+            ->map(function ($subKriterias) {
+                // Urutkan sub-kriteria dalam setiap grup berdasarkan nilai_max (atau nilai_min) descending
+                // Agar pencarian rentang lebih efisien nanti (ambil yang pertama yang cocok)
+                return $subKriterias->sortByDesc('nilai_max')->values();
+            });
+        // -------------------
+
         // $subKriteria mungkin tidak digunakan di view ini lagi
         // $subKriteria = $this->subKriteriaService->getAll();
 
@@ -74,6 +89,9 @@ class PenilaianController extends Controller
             "nextId" => $nextId,
             "currentNama" => $data->alternatif->objek->nama, // Kirim nama siswa saat ini
             "allAlternatif" => $allAlternatif, // Kirim seluruh koleksi jika diperlukan di view untuk info lain
+            // --- TAMBAHKAN INI ---
+            "subKriteriaGrouped" => $subKriteriaGrouped,
+            // -------------------
         ]);
     }
 
@@ -165,4 +183,98 @@ class PenilaianController extends Controller
         $subKriteriaTerendah = SubKriteria::where('kriteria_id', $kriteriaId)->orderBy('nilai', 'asc')->first();
         return $subKriteriaTerendah ? $subKriteriaTerendah->id : null;
     }
+
+   // Method untuk menampilkan form import
+    public function showImportForm()
+    {
+        $judul = "Import Penilaian";
+        // Ambil semua kriteria untuk ditampilkan di dropdown
+        $kriterias = Kriteria::all(); // <-- Ambil semua kriteria
+        return view('dashboard.penilaian.import', compact('judul', 'kriterias'));
+    }
+
+    // Method untuk memproses file import
+   
+
+public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+            'target_kriteria_id' => 'required|exists:kriteria,id',
+            'sheet_name' => 'required|string',
+        ]);
+
+        try {
+            $targetKriteriaId = $request->input('target_kriteria_id');
+            $sheetName = $request->input('sheet_name');
+
+            $import = new PenilaianImport($targetKriteriaId, $sheetName); // Gunakan PenilaianImport
+
+            Excel::import($import, $request->file('file'));
+
+            $kriteriaTujuan = Kriteria::find($targetKriteriaId)->nama;
+            return redirect()->route('penilaian')->with('berhasil', "Data penilaian berhasil diimport dari sheet '$sheetName' ke kriteria '$kriteriaTujuan'!");
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $errorMessages = [];
+            foreach ($failures as $failure) {
+                $errorMessages[] = "Baris " . $failure->row() . ": " . implode(", ", $failure->errors());
+            }
+            return redirect()->back()->withErrors($errorMessages)->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Import Penilaian Error: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['file' => 'Terjadi kesalahan saat mengimport file: ' . $e->getMessage()]);
+        }
+    }
+
+
+
+    // Method untuk membaca sheet dari file Excel
+    public function getSheets(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            $path = $request->file('file')->getRealPath();
+
+            if (!$path) {
+                 \Log::error("Gagal mendapatkan path sementara file.");
+                 return response()->json([
+                     'success' => false,
+                     'message' => 'Gagal mendapatkan path file.'
+                 ], 500);
+            }
+
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($path);
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($path);
+
+            $sheetNames = $spreadsheet->getSheetNames();
+
+            return response()->json([
+                'success' => true,
+                'sheets' => $sheetNames,
+            ]);
+
+        } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+            \Log::error('Gagal membaca sheet (Spreadsheet Reader): ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'File Excel tidak valid atau rusak: ' . $e->getMessage(),
+            ], 400);
+        } catch (\Exception $e) {
+            \Log::error('Gagal membaca sheet (Umum): ' . $e->getMessage());
+            \Log::error('Trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan internal saat membaca file: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
 }

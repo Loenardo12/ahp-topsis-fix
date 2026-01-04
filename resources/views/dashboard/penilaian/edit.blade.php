@@ -1,5 +1,3 @@
-{{-- resources/views/dashboard/penilaian/edit.blade.php --}}
-
 @extends('dashboard.layouts.app')
 
 @section('container')
@@ -25,15 +23,20 @@
                             <label class="label">
                                 <span class="label-text">Kriteria: <span class="text-greenPrimary">{{ $item->nama }}</span></span>
                             </label>
-                            <input
-                                type="number"
-                                name="nilai_asli[{{ $item->id }}]" // Gunakan id kriteria sebagai key
-                                value="{{ old('nilai_asli.'.$item->id, $nilaiPerKriteria[$item->id] ?? '') }}" // Ambil nilai dari array $nilaiPerKriteria
-                                min="0"
-                                max="100"
-                                class="input input-bordered text-dark w-full max-w-xs"
-                                required
-                            />
+                            <div class="flex items-center gap-2"> {{-- Wrapper untuk input dan label kategori --}}
+                                <input
+                                    type="number"
+                                    name="nilai_asli[{{ $item->id }}]"
+                                    value="{{ old('nilai_asli.'.$item->id, $nilaiPerKriteria[$item->id] ?? '') }}" 
+                                    min="0"
+                                    max="100"
+                                    class="input input-bordered text-dark w-full max-w-xs"
+                                    required
+                                />
+                                <span class="label-text-alt text-gray-500"> {{-- Elemen untuk menampilkan kategori --}}
+                                    <span id="kategori_{{ $item->id }}">-</span> {{-- Gunakan ID unik --}}
+                                </span>
+                            </div>
                             <label class="label">
                                 @error('nilai_asli.'.$item->id)
                                     <span class="label-text-alt text-error">{{ $message }}</span>
@@ -67,4 +70,49 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('js')
+    <script>
+        // Tambahkan skrip untuk menampilkan kategori
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ambil data sub-kriteria dari PHP ke JavaScript
+            const subKriteriaGrouped = @json($subKriteriaGrouped); // Konversi koleksi Laravel ke JSON
+
+            // Ambil semua input nilai_asli
+            const nilaiInputs = document.querySelectorAll('input[name^="nilai_asli["]');
+
+            nilaiInputs.forEach(input => {
+                // Tambahkan event listener untuk setiap input
+                input.addEventListener('input', function() { // Gunakan 'input' untuk deteksi real-time
+                    const nameAttr = this.getAttribute('name');
+                    const kriteriaId = nameAttr.match(/\[(\d+)\]/)[1]; // Ekstrak ID kriteria dari name="nilai_asli[123]"
+                    const nilaiAsli = parseInt(this.value); // Ambil nilai input
+
+                    let kategoriNama = '-'; // Default jika tidak ditemukan
+
+                    // Cari rentang yang cocok di data sub_kriteria untuk kriteria_id ini
+                    if (subKriteriaGrouped[kriteriaId]) {
+                        const subKriterias = subKriteriaGrouped[kriteriaId];
+                        for (let i = 0; i < subKriterias.length; i++) {
+                            const sub = subKriterias[i];
+                            if (nilaiAsli >= sub.nilai_min && nilaiAsli <= sub.nilai_max) {
+                                kategoriNama = sub.nama; // Ambil nama sub-kriteria yang cocok
+                                break; // Hentikan loop karena sudah ditemukan rentang yang cocok (karena diurutkan descending)
+                            }
+                        }
+                    }
+
+                    // Update span yang menampilkan kategori
+                    const kategoriSpan = document.getElementById(`kategori_${kriteriaId}`);
+                    if (kategoriSpan) {
+                        kategoriSpan.textContent = kategoriNama;
+                    }
+                });
+
+                // Panggil event listener sekali untuk menampilkan kategori awal jika nilai sudah ada
+                input.dispatchEvent(new Event('input'));
+            });
+        });
+    </script>
 @endsection
