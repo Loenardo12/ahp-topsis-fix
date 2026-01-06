@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            {{-- Tabel Penilaian --}}
+                        {{-- Tabel Penilaian --}}
             <div class="shadow-soft-xl relative mb-5 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid border-transparent bg-white bg-clip-border">
                 <div class="border-b-solid flex flex-row items-center justify-between rounded-t-2xl border-b-0 border-b-transparent bg-white p-6 pb-0">
                     <h2>Penilaian</h2>
@@ -53,9 +53,8 @@
                                     <td>{{ $item->alternatif->objek->nama }}</td>
                                     @foreach ($penilaian->where("alternatif_id", $item->alternatif_id) as $value)
                                         <td>
-                                            @if ($value->subKriteria != null)
-                                                {{ $value->subKriteria->nilai }}
-                                            @endif
+                                            {{-- Tampilkan nilai_asli jika ada, jika tidak, tampilkan subKriteria->nilai --}}
+                                            {{ $value->nilai_asli ?? ($value->subKriteria ? $value->subKriteria->nilai : 'N/A') }}
                                         </td>
                                     @endforeach
                                 </tr>

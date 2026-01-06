@@ -18,6 +18,9 @@ use App\Http\Controllers\TopsisController;
 use App\Http\Controllers\usercontroller;
 use App\Models\Kelas10;
 use App\Http\Controllers\ImportAbsenController;
+use App\Http\Controllers\ImportAbsenkelas11Controller;
+use App\Http\Controllers\ImportAbsenkelas12Controller;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,15 +59,29 @@ Route::get('/kelas12', function () {
 // })->middleware(['auth', 'verified'])->name('dashboard2');
 
 
-// kelas 10
+// import kelas 10
 // Route untuk memproses import
 Route::post('/import/process', [ImportAbsenController::class, 'processImport'])->name('import.absen.process');
-
 // Route untuk form import
 Route::get('/kelas10/import', [ImportAbsenController::class, 'showForm'])->name('import.absen.form');
-
 // Route untuk mendapatkan daftar sheet
 Route::post('/import/get-sheets', [ImportAbsenController::class, 'getSheets'])->name('import.absen.getSheets');
+
+// // import kelas 11
+// // Route untuk memproses import
+// Route::post('/import/process', [ImportAbsenkelas11Controller::class, 'processImport'])->name('import.absen.process');
+// // Route untuk form import
+// Route::get('/kelas11/import', [ImportAbsenkelas11Controller::class, 'showForm'])->name('import.absen.form');
+// // Route untuk mendapatkan daftar sheet
+// Route::post('/import/get-sheets', [ImportAbsenkelas11Controller::class, 'getSheets'])->name('import.absen.getSheets');
+
+// // import kelas 12
+// // Route untuk memproses import
+// Route::post('/import/process', [ImportAbsenkelas12Controller::class, 'processImport'])->name('import.absen.process');
+// // Route untuk form import
+// Route::get('/kelas12/import', [ImportAbsenkelas12Controller::class, 'showForm'])->name('import.absen.form');
+// // Route untuk mendapatkan daftar sheet
+// Route::post('/import/get-sheets', [ImportAbsenkelas12Controller::class, 'getSheets'])->name('import.absen.getSheets');
 
 
 /// Route untuk Kelas10
@@ -78,48 +95,32 @@ Route::get('/absen/{absenkelas10}/edit', [AbsenKelas10Controller::class, 'edit']
 Route::put('/absen/{absenkelas10}', [AbsenKelas10Controller::class, 'update'])->name('absenkelas10.update');
 Route::delete('/absen/{absenkelas10}', [AbsenKelas10Controller::class, 'destroy'])->name('absenkelas10.destroy');
 
-// //kelas 11
-// // Route untuk Kelas11
-// Route::get('/kelas11/import', [ImportAbsenController::class, 'showForm'])->name('import.absen.form');
 
-// // Route untuk mendapatkan daftar sheet
-// Route::post('/import/get-sheets', [ImportAbsenController::class, 'getSheets'])->name('import.absen.getSheets');
+/// Route untuk Kelas11
+Route::resource('kelas11', Kelas11Controller::class);
 
-// // Route untuk memproses import
-// Route::post('/import/process', [ImportAbsenController::class, 'processImport'])->name('import.absen.process');
+// Route untuk AbsenKelas11
+Route::get('/kelas11/{kelas11}/absen/create', [AbsenKelas11Controller::class, 'create'])->name('absenkelas11.create');
+// Ganti URI untuk store: hapus {kelas11}
+Route::post('/kelas11/absen', [AbsenKelas11Controller::class, 'store'])->name('absenkelas11.store');
+Route::get('/absen/{absenkelas11}/edit', [AbsenKelas11Controller::class, 'edit'])->name('absenkelas11.edit');
+Route::put('/absen/{absenkelas11}', [AbsenKelas11Controller::class, 'update'])->name('absenkelas11.update');
+Route::delete('/absen/{absenkelas11}', [AbsenKelas11Controller::class, 'destroy'])->name('absenkelas11.destroy');
 
-// /// Route untuk Kelas11
-// Route::resource('kelas11', Kelas11Controller::class);
+/// Route untuk Kelas12
+Route::resource('kelas12', Kelas12Controller::class);
 
-// // Route untuk AbsenKelas11
-// Route::get('/kelas11/{kelas11}/absen/create', [AbsenKelas11Controller::class, 'create'])->name('absenkelas11.create');
-// // Ganti URI untuk store: hapus {kelas11}
-// Route::post('/kelas11/absen', [AbsenKelas11Controller::class, 'store'])->name('absenkelas11.store');
-// Route::get('/absen/{absenkelas11}/edit', [AbsenKelas11Controller::class, 'edit'])->name('absenkelas11.edit');
-// Route::put('/absen/{absenkelas11}', [AbsenKelas11Controller::class, 'update'])->name('absenkelas11.update');
-// Route::delete('/absen/{absenkelas11}', [AbsenKelas11Controller::class, 'destroy'])->name('absenkelas11.destroy');
+// Route untuk AbsenKelas12
+Route::get('/kelas12/{kelas12}/absen/create', [AbsenKelas12Controller::class, 'create'])->name('absenkelas12.create');
+// Ganti URI untuk store: hapus {kelas12}
+Route::post('/kelas12/absen', [AbsenKelas12Controller::class, 'store'])->name('absenkelas12.store');
+Route::get('/absen/{absenkelas12}/edit', [AbsenKelas12Controller::class, 'edit'])->name('absenkelas12.edit');
+Route::put('/absen/{absenkelas12}', [AbsenKelas12Controller::class, 'update'])->name('absenkelas12.update');
+Route::delete('/absen/{absenkelas12}', [AbsenKelas12Controller::class, 'destroy'])->name('absenkelas12.destroy');
 
 
-// //kelas 12
-// // Route untuk Kelas12
-// Route::get('/kelas12/import', [ImportAbsenController::class, 'showForm'])->name('import.absen.form');
 
-// // Route untuk mendapatkan daftar sheet
-// Route::post('/import/get-sheets', [ImportAbsenController::class, 'getSheets'])->name('import.absen.getSheets');
 
-// // Route untuk memproses import
-// Route::post('/import/process', [ImportAbsenController::class, 'processImport'])->name('import.absen.process');
-
-// /// Route untuk Kelas12
-// Route::resource('kelas12', Kelas12Controller::class);
-
-// // Route untuk AbsenKelas12
-// Route::get('/kelas12/{kelas12}/absen/create', [AbsenKelas12Controller::class, 'create'])->name('absenkelas12.create');
-// // Ganti URI untuk store: hapus {kelas11}
-// Route::post('/kelas12/absen', [AbsenKelas12Controller::class, 'store'])->name('absenkelas12.store');
-// Route::get('/absen/{absenkelas12}/edit', [AbsenKelas12Controller::class, 'edit'])->name('absenkelas12.edit');
-// Route::put('/absen/{absenkelas12}', [AbsenKelas12Controller::class, 'update'])->name('absenkelas12.update');
-// Route::delete('/absen/{absenkelas12}', [AbsenKelas12Controller::class, 'destroy'])->name('absenkelas12.destroy');
 
 
 // Route untuk halaman pilih kelas
@@ -132,9 +133,10 @@ Route::post('/objek/ambil-siswa', [ObjekController::class, 'ambilSiswa'])->name(
 Route::get('/api/kelas10', function () {
     return Kelas10::select('id', 'title', 'description')->get();
 });
-
-
 Route::post('/objek/hapus-multiple', [ObjekController::class, 'hapusMultiple'])->name('objek.hapus.multiple');
+    Route::get('/pilih-kelas', [ObjekController::class, 'pilihKelas'])->name('objek.pilih.kelas'); // <-- Tambahkan ini jika belum ada
+    Route::post('/ambil-siswa', [ObjekController::class, 'ambilSiswa'])->name('objek.ambil.siswa');
+
 
 //route user
 route::resource('users', userController::class)->middleware('isSuperadmin');
