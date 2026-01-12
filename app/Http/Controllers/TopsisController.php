@@ -28,7 +28,16 @@ class TopsisController extends Controller
             'hasilTopsis' => $hasilTopsis,
         ]);
     }
+    public function hasilperhitunganAkhir()
+    {
+        $judul = "Hasil Perhitungan Akhir";
+        $hasilTopsis = $this->topsisServices->getHasilTopsis();
 
+        return view('dashboard.hasil_akhir.hasilperhitungan', [
+            'judul' => $judul,
+            'hasilTopsis' => $hasilTopsis,
+        ]);
+    }
     public function index()
     {
         $judul = "Perhitungan";
@@ -87,7 +96,8 @@ class TopsisController extends Controller
             'solusiIdealNegatif' => $solusiIdealNegatif,
             'hasilTopsis' => $hasilTopsis,
         ]);
-
+         $pdf->setOption('isRemoteEnabled', true);
+    $pdf->setOption('isHtml5ParserEnabled', true);
         // return $pdf->download('laporan-penilaian.pdf');
         return $pdf->stream();
     }
@@ -101,7 +111,8 @@ class TopsisController extends Controller
             'judul' => $judul,
             'hasilTopsis' => $hasilTopsis,
         ]);
-
+         $pdf->setOption('isRemoteEnabled', true);
+    $pdf->setOption('isHtml5ParserEnabled', true);
         // return $pdf->download('laporan-penilaian.pdf');
         return $pdf->stream();
     }

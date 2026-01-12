@@ -19,7 +19,7 @@
     </form>
 
     <!-- Export PDF -->
-    <form action="{{ route('pdf_topsis') }}" method="POST" enctype="multipart/form-data" target="_blank">
+    {{-- <form action="{{ route('pdf_topsis') }}" method="POST" enctype="multipart/form-data" target="_blank">
         @csrf
         <button type="submit"
             class="flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-200
@@ -29,7 +29,7 @@
             <i class="ri-file-pdf-line text-lg"></i>
             Export PDF
         </button>
-    </form>
+    </form> --}}
 </div>
 
 

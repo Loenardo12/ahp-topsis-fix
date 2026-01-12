@@ -217,7 +217,7 @@
 
 
                 <div>
-                    <a href="{{ route('import.absen.form', ['kelas12_id' => $kelas12_obj->id]) }}"
+                    <a href="{{ route('import.absen-kelas12.form', ['kelas12_id' => $kelas12_obj->id]) }}"
                         class="btn btn-warning me-2">
                         <i class="bi bi-upload"></i> Import dari Excel
                     </a>

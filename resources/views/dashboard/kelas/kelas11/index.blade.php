@@ -92,7 +92,7 @@
       </div>
     @empty
 <div class="alert alert-danger">
-                                        Data Products belum ada.
+                                        Data kelass belum ada.
                                     </div>
     @endforelse
 

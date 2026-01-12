@@ -54,6 +54,8 @@ Route::get('/kelas12', function () {
     return view('dashboard.user.kelas12');
 });
 
+
+
 // Route::get('/dashboard2', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard2');
@@ -69,20 +71,20 @@ Route::post('/import/get-sheets', [ImportAbsenController::class, 'getSheets'])->
 
 // // import kelas 11
 // // Route untuk memproses import
-// Route::post('/import/process', [ImportAbsenkelas11Controller::class, 'processImport'])->name('import.absen.process');
-// // Route untuk form import
-// Route::get('/kelas11/import', [ImportAbsenkelas11Controller::class, 'showForm'])->name('import.absen.form');
-// // Route untuk mendapatkan daftar sheet
-// Route::post('/import/get-sheets', [ImportAbsenkelas11Controller::class, 'getSheets'])->name('import.absen.getSheets');
+Route::post('/import/process-kelas11', [ImportAbsenkelas11Controller::class, 'processImport'])->name('import.absen-kelas11.process');
+// Route untuk form import
+Route::get('/kelas11/import', [ImportAbsenkelas11Controller::class, 'showForm'])->name('import.absen-kelas11.form');
+// Route untuk mendapatkan daftar sheet
+Route::post('/import/get-sheets-kelas11', [ImportAbsenkelas11Controller::class, 'getSheets'])->name('import.absen-kelas11.getSheets');
+
 
 // // import kelas 12
 // // Route untuk memproses import
-// Route::post('/import/process', [ImportAbsenkelas12Controller::class, 'processImport'])->name('import.absen.process');
-// // Route untuk form import
-// Route::get('/kelas12/import', [ImportAbsenkelas12Controller::class, 'showForm'])->name('import.absen.form');
-// // Route untuk mendapatkan daftar sheet
-// Route::post('/import/get-sheets', [ImportAbsenkelas12Controller::class, 'getSheets'])->name('import.absen.getSheets');
-
+Route::post('/import/process-kelas12', [ImportAbsenkelas12Controller::class, 'processImport'])->name('import.absen-kelas12.process');
+// Route untuk form import
+Route::get('/kelas12/import', [ImportAbsenkelas12Controller::class, 'showForm'])->name('import.absen-kelas12.form');
+// Route untuk mendapatkan daftar sheet
+Route::post('/import/get-sheets-kelas12', [ImportAbsenkelas12Controller::class, 'getSheets'])->name('import.absen-kelas12.getSheets');
 
 /// Route untuk Kelas10
 Route::resource('kelas10', Kelas10Controller::class);
@@ -163,6 +165,25 @@ Route::group([
 ], function() {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Route::group([
+    //     'prefix' => 'import-kelas'
+    // ], function () {
+    //    Route::post('/process', [ImportAbsenController::class, 'processImport'])->name('import.kelas10.process');
+    //     Route::get('/kelas10', [ImportAbsenController::class, 'showForm'])->name('import.kelas10.form');
+    //     Route::post('/get-sheets', [ImportAbsenController::class, 'getSheets'])->name('import.kelas10.getSheets');
+
+    //     // Import Kelas 11
+    //     Route::post('/process-kelas11', [ImportAbsenkelas11Controller::class, 'processImport'])->name('import.kelas11.process');
+    //     Route::get('/kelas11', [ImportAbsenkelas11Controller::class, 'showForm'])->name('import.kelas11.form');
+    //     Route::post('/get-sheets-kelas11', [ImportAbsenkelas11Controller::class, 'getSheets'])->name('import.kelas11.getSheets');
+
+    //     // Import Kelas 12
+    //     Route::post('/process-kelas12', [ImportAbsenkelas12Controller::class, 'processImport'])->name('import.kelas12.process');
+    //     Route::get('/kelas12', [ImportAbsenkelas12Controller::class, 'showForm'])->name('import.kelas12.form');
+    //     Route::post('/get-sheets-kelas12', [ImportAbsenkelas12Controller::class, 'getSheets'])->name('import.kelas12.getSheets');
+    // });
+
+
     Route::group([
         'prefix' => 'kriteria'
     ], function () {
@@ -226,6 +247,7 @@ Route::group([
     Route::post('/pdf_hasil', [TopsisController::class, 'pdf_hasil'])->name('pdf_hasil');
     Route::post('/hitung_topsis', [TopsisController::class, 'hitungTopsis'])->name('hitung_topsis');
     Route::get('/hasil_akhir', [TopsisController::class, 'hasilAkhir'])->name('hasil_akhir');
+    Route::get('/hasilperhitunganakhir', [TopsisController::class, 'hasilperhitunganAkhir'])->name('hasilperhitunganakhir');
     Route::post('/alternatif/simpan-semua-objek', [AlternatifController::class, 'simpanSemuaObjek'])->name('alternatif.simpan.semua.objek');
 });
 

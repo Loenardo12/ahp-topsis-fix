@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('modelkelas10s', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-             $table->text('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

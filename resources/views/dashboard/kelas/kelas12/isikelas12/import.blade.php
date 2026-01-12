@@ -28,7 +28,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <form id="import-form" action="{{ route('import.absen.process') }}" method="POST"
+                        <form id="import-form" action="{{ route('import.absen-kelas12.process') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
 
@@ -168,7 +168,7 @@
                         formData.append('file_excel', file);
                         formData.append('_token', csrfToken);
 
-                        fetch('{{ route('import.absen.getSheets') }}', {
+                        fetch('{{ route('import.absen-kelas12.getSheets') }}', {
                                 method: 'POST',
                                 body: formData,
                             })

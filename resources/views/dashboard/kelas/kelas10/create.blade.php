@@ -22,7 +22,7 @@
 
                             <div class="form-group mb-3">
                                 <label class="font-weight-bold">TITLE</label>
-                                <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" placeholder="Masukkan Judul Product">
+                                <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" placeholder="Masukkan Judul kelas">
 
                                 <!-- error message untuk title -->
                                 @error('title')
@@ -34,7 +34,7 @@
 
                             <div class="form-group mb-3">
                                 <label class="font-weight-bold">DESCRIPTION</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description Product">{{ old('description') }}</textarea>
+                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description kelas">{{ old('description') }}</textarea>
 
                                 <!-- error message untuk description -->
                                 @error('description')

@@ -20,7 +20,7 @@
             Export PERHITUNGAN PDF
         </button>
     </form> --}}
-                    <form action="{{ route('pdf_hasil') }}" method="post" enctype="multipart/form-data" target="_blank">
+                    <form action="{{ route('pdf_topsis') }}" method="post" enctype="multipart/form-data" target="_blank">
                         @csrf
                         <button type="submit"
                                 class="btn btn-sm text-white font-semibold flex items-center gap-2 rounded-md
@@ -29,7 +29,7 @@
                                        hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-inner"
                                 style="background-color:#dc2626; border:none;">
                             <i class="ri-file-pdf-line text-base"></i>
-                            Export HASIL PDF
+                            EXPORT PERHITUNGAN PDF
                         </button>
                     </form>
 
