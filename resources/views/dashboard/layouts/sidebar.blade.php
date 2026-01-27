@@ -164,6 +164,13 @@
                     Report Perhitungan
                 </a>
             </li>
+             <li>
+                <a href="/about"
+                    class="flex items-center px-4 py-3 text-sm font-medium rounded-lg hover:bg-green-50 dark:hover:bg-gray-700 transition-colors {{ Request::is('dashboard/hasil_akhir*') ? 'bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400' : 'text-gray-700 dark:text-gray-300' }}">
+                    <i class="ri-bar-chart-2-fill mr-3 text-green-600 dark:text-green-400"></i>
+                    RABOUTANGAN
+                </a>
+            </li>
 
             <!-- Logout -->
             <li class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4">

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
-class kelas12Controller extends Controller
+class Kelas12Controller extends Controller
 {
     public function index()
     {

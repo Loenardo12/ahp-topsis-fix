@@ -5,7 +5,7 @@ use App\Models\kelas12;
 use App\Models\Isikelas12;
 use Illuminate\Http\Request;
 
-class Isikelas12Controller extends Controller
+class IsiKelas12Controller extends Controller
 {
     // Jika diperlukan, tambahkan create untuk add siswa
     public function create($kelasId)

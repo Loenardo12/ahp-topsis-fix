@@ -8,7 +8,7 @@ use App\Models\Isikelas11;
 use App\Models\kelas11;
 use Illuminate\Http\Request;
 
-class Absenkelas11Controller extends Controller
+class AbsenKelas11Controller extends Controller
 {
     public function create(kelas11 $kelas11) // Parameter sesuai dengan route resource
     {

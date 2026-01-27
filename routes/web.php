@@ -2,13 +2,12 @@
 
 use App\Http\Controllers\AlternatifController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\isikelas10controller;
 use App\Http\Controllers\AbsenKelas10Controller;
 use App\Http\Controllers\AbsenKelas11Controller;
 use App\Http\Controllers\AbsenKelas12Controller;
-use App\Http\Controllers\kelas10controller;
-use App\Http\Controllers\kelas11controller;
-use App\Http\Controllers\kelas12controller;
+use App\Http\Controllers\Kelas10controller;
+use App\Http\Controllers\Kelas11controller;
+use App\Http\Controllers\Kelas12controller;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\ObjekController;
 use App\Http\Controllers\PenilaianController;
@@ -53,7 +52,9 @@ Route::get('/kelas11', function () {
 Route::get('/kelas12', function () {
     return view('dashboard.user.kelas12');
 });
-
+Route::get('/about', function () {
+    return view('dashboard.about');
+});
 
 
 // Route::get('/dashboard2', function () {

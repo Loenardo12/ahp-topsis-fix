@@ -13,7 +13,7 @@ class AbsenKelas10Controller extends Controller
     public function create(Kelas10 $kelas10) // Parameter sesuai dengan route resource
     {
         $kelas10_obj = $kelas10; // Untuk digunakan di view
-        $isiKelas10 = $kelas10->isikelas10;
+        $isiKelas10 = $kelas10->isi;
         return view('dashboard.kelas.kelas10.isikelas10.create', compact('kelas10_obj', 'isiKelas10'));
     }
 
